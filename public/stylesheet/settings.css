@@ -1,0 +1,87 @@
+.settings-form {
+  max-width: 600px;
+}
+
+.card {
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+.card h3 {
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin: 8px 0;
+}
+
+.btn-save {
+  background: #2563eb;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Toggle Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+
+.switch input {
+  opacity: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  background-color: #ccc;
+  border-radius: 26px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: .3s;
+}
+
+input:checked + .slider {
+  background-color: #22c55e;
+}
+
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
+
+.grade-remarks {
+  display: grid;
+  gap: 12px;
+}
+
+.remark-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.remark-row input {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}

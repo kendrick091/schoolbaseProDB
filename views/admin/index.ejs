@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheet/dashboard.css">
+    <link rel="stylesheet" href="/stylesheet/menuToggle.css">
+    <link rel="stylesheet" href="/stylesheet/overlay.css">
+</head>
+<body>
+    <div class="container_content">
+    <% if (showUser){%>
+        <div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">SchoolBase</h2>
+
+        <nav>
+            <a href="#" class="active">Dashboard</a>
+            <a href="/admin/student">Students</a>
+            <a href="/teachers">Teachers</a>
+            <a href="/sessions">Academic Sessions</a>
+            <a href="/classes">Classes</a>
+            <a href="/subjects">Subjects</a>
+            <a href="/fees">Fee Management</a>
+            <a href="/adminResult">Results</a>
+            <a href="/settings">Settings</a>
+        </nav>
+
+        <a href="/logout" class="logout">Logout</a>
+    </aside>
+    
+
+    <!-- Main Content -->
+    <main class="content">
+         <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+    <form 
+    action="/admin/update-logo" 
+    method="POST" 
+    enctype="multipart/form-data"
+    id="logoForm"
+>
+    <input 
+        type="file" 
+        name="schoolLogo" 
+        id="logoInput" 
+        accept="image/*" 
+        hidden
+    >
+
+    <img 
+        src="<%= showUser.schoolLogo %>" 
+        alt="School Logo"
+        class="school-logo clickable"
+        onclick="document.getElementById('logoInput').click()"
+    >
+</form>
+
+
+        <header class="topbar">
+            <h3><%= showUser.schoolname %></h3>
+            <h1>Admin Dashboard</h1>
+            <span class="date" id="todayDate"></span>
+        </header>
+        <h3>Access Token: <%= showUser.token %></h3>
+
+        <!-- Stats Cards -->
+        <section class="stats">
+            <div class="card">
+                <h3>Total Students</h3>
+                <div class="amountInfo">
+                <p><%= studentCount %></p>
+                <div class="countGenderInfo">
+                    <div class="genderDiv">
+                        Boys <span></span> <br>
+                        <%= totalBoys %>
+                    </div>
+                    <div class="genderDiv">
+                        / <span></span>
+                    </div>
+                    <div class="genderDiv">
+                        Girls <span></span> <br>
+                        <%= totalGirls %>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="card">
+                <h3>Total Teachers</h3>
+                <div class="amountInfo">
+                <p><%= teacherCount %></p>
+                <div class="countGenderInfo">
+                    <div class="genderDiv">
+                        Male <span></span> <br>
+                        <%= maleTeachers %>
+                    </div>
+                    <div class="genderDiv">
+                        / <span></span>
+                    </div>
+                    <div class="genderDiv">
+                        Female <span></span> <br>
+                        <%= femaleTeachers %>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="card">
+                <h3>Academic Session</h3>
+                <%if(session) { %>
+                <p><%= session.academicSession %></p>
+                <%}else{ %>
+                <p>No Active Session</p>
+                <%}%>
+            </div>
+
+            <div class="card">
+                <h3>Classes</h3>
+                <p><%= classCount %></p>
+            </div>
+        </section>
+
+        <!-- Overlay -->
+<div id="overlay" onclick="closeAll()"></div>
+
+<!-- Add Student -->
+<div class="modal" id="studentModal">
+    <form action="/admin/addStudent" method="post">
+        <h2>Add Student</h2>
+        <input type="hidden" name="schoolID" value="<%= showUser._id %>">
+        <input type="hidden" name="token" value="<%= showUser.token %>">
+        <input type="hidden" name="payment" value="false">
+        <%if(session){ %>
+            <div style="color: rgb(56, 240, 56);">
+                Academic Session <%= session.academicSession %> is active</div>
+        <%}else{%>
+            <div style="color: rgb(233, 58, 52);">No Academic Session Yet</div>
+        <%}%>
+        <input type="text" name="studentFullName" placeholder="Student Full Name" required>
+        <select name="gender" id="">
+            <option value="">--Select Gender--</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+        <select name="studentClass" id="">
+            <option value="">Select Student Class</option>
+            <% listClass.forEach((classItem) => { %>
+                <option value="<%= classItem._id %>"><%= classItem.className %></option>
+            <% }); %>
+        </select>
+        <button>Submit</button>
+        <span class="close" onclick="closeAll()">×</span>
+    </form>
+</div>
+
+<!-- Add Teacher -->
+<div class="modal" id="formTeacherModal">
+    <section>
+    <form action="/admin/addTeacher" method="post">
+        <h2>Add Teacher</h2>
+        <input type="hidden" name="schoolID" value="<%= showUser._id %>">
+        <input type="hidden" name="token" value="<%= showUser.token %>">
+        <input type="text" name="teacherName" placeholder="Teacher's Name" required>
+        <input type="text" name="phoneNo" placeholder="Phone Number" required>
+        <select name="gender" id="">
+            <option value="">--Select Gender--</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+       <select name="teacherRole" id="teacherRole">
+  <option value="">Select Teacher Role</option>
+  <option value="classTeacher">Class Teacher</option>
+  <option value="subjectTeacher">Subject Teacher</option>
+</select>
+
+<select name="classAssigned" id="assignClass">
+  <option value="">Assign Class to Teacher</option>
+  <% listClass.forEach((classItem) => { %>
+    <option value="<%= classItem._id %>"><%= classItem.className %></option>
+  <% }); %>
+</select>
+
+<select name="subjectAssigned" id="assignSubject">
+  <option value="">Assign Subject to Teacher</option>
+  <% listSubject.forEach((subjectItem) => { %>
+    <option value="<%= subjectItem._id %>"><%= subjectItem.subjectName %></option>
+  <% }); %>
+</select>
+        <button>Submit</button>
+        <span class="close" onclick="closeAll()">×</span>
+    </form>
+    </section>
+</div>
+
+<!-- Add Session -->
+<div class="modal" id="sessionModal">
+    <form action="/admin/addSession" method="post">
+        <h2>Add Academic Session</h2>
+        <input type="hidden" name="schoolID" value="<%= showUser._id %>">
+        <input type="text" name="academicSession" placeholder="e.g. 2024 / 2025" required>
+        <button>Submit</button>
+        <span class="close" onclick="closeAll()">×</span>
+    </form>
+</div>
+
+<!-- Add Class -->
+<div class="modal" id="classModal">
+    <form action="/admin/addClass" method="post">
+        <h2>Add Class</h2>
+        <input type="hidden" name="schoolID" value="<%= showUser._id %>">
+        <input type="text" name="className" placeholder="e.g. JSS 1" required>
+        <button>Submit</button>
+        <span class="close" onclick="closeAll()">×</span>
+    </form>
+</div>
+<!-- Add Subject -->
+<div class="modal" id="subjectModal">
+    <form action="/admin/addSubject" method="post">
+        <h2>Add Subject</h2>
+        <input type="text" name="subjectName" placeholder="e.g. Mathematics" required>
+        <button>Submit</button>
+        <span class="close" onclick="closeAll()">×</span>
+    </form>
+</div>
+
+
+        <!-- Action Buttons -->
+        <section class="actions">
+            <button onclick="openModal('studentModal')">Add Student</button>
+            <button onclick="openModal('formTeacherModal')">Add Teacher</button>
+            <button onclick="openModal('sessionModal')">Create Session</button>
+            <button onclick="openModal('classModal')">Add Class</button>
+            <button onclick="openModal('subjectModal')">Add Subject</button>
+        </section>
+
+
+        <!-- Extra Section -->
+        <section class="extra">
+            <div class="box">
+                <h3>Quick Info</h3>
+                <ul>
+                    <li>✔ School setup completed</li>
+                    <li>✔ Result module active</li>
+                    <!-- <li>⚠ Pending teacher approvals</li> -->
+                </ul>
+            </div>
+<!-- 
+            <div class="box">
+                <h3>Recent Activity</h3>
+                <p>No recent activity yet.</p>
+            </div> -->
+        </section>
+
+    </main>
+</div>
+    <%}else{%>
+        <div class="container">
+        <h2>No Account</h2>
+        </div>
+    <%}%>
+    </div>
+    <script src="/scriptFolder/showDate.js"></script>
+    <script src="/scriptFolder/menuToggle.js"></script>
+    <script src="/scriptFolder/openModal.js"></script>
+    <script src="/scriptFolder/autoSubmitLogo.js"></script>
+</body>
+</html>

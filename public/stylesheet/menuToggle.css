@@ -1,0 +1,29 @@
+.menu-btn {
+    background: none;
+    border: none;
+    color: rgba(3, 69, 95, 0.966);
+    font-size: 1.4rem;
+    cursor: pointer;
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .menu-btn {
+        display: block;
+    }
+
+    .sidebar nav.active {
+        display: block;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background: #1e293b;
+        padding: 1rem;
+    }
+
+    .sidebar nav a {
+        padding: 0.8rem;
+        display: block;
+    }
+}

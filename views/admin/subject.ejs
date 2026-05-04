@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheet/dashboard.css">
+    <link rel="stylesheet" href="/stylesheet/menuToggle.css">
+    <link rel="stylesheet" href="/stylesheet/overlay.css">
+    <link rel="stylesheet" href="/stylesheet/table.css">
+</head>
+<body>
+    <div class="dashboard">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">SchoolBase</h2>
+
+        <nav>
+            <a href="/admin">Dashboard</a>
+            <a href="/admin/student">Students</a>
+            <a href="/teachers">Teachers</a>
+            <a href="/sessions">Academic Sessions</a>
+            <a href="/classes">Classes</a>
+            <a href="/subjects" class="active">Subjects</a>
+            <a href="/fees">Fee Management</a>
+            <a href="/adminResult">Results</a>
+            <a href="/settings">Settings</a>
+        </nav>
+
+        <a href="/logout" class="logout">Logout</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+        <header class="topbar">
+            <h3>Subjects</h3>
+            <h1><%= title %></h1>
+            <span class="date" id="todayDate"></span>
+        </header>
+
+        <div id="overlay" onclick="closeAll()"></div>
+
+        <!-- Action Bar -->
+        <section class="actions">
+            <button onclick="openModal('subjectModal')">➕ Add Subject</button>
+        </section>
+
+        <!-- Student Table -->
+        <section class="table-section">
+  <div class="table-header">
+    <h2>Class</h2>
+
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search subjects..."
+      onkeyup="searchTable()"
+    />
+  </div>
+
+  <div class="table-wrapper">
+  <table id="studentTable">
+    <thead>
+      <tr>
+        <th onclick="sortTable(1)">Subjects ⬍</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+  <% subject.forEach((sub) => { %>
+    <tr>
+      <td><%= sub.subjectName %></td>
+
+      <td class="actions">
+        <a href="/edit/subject/<%= sub._id %>">
+          <button class="btn edit">Edit</button>
+        </a>
+
+        <form action="/subjects/delete/<%= sub._id %>" method="post" style="display:inline;">
+  <button
+    class="btn delete"
+    onclick="return confirm('Are you sure you want to delete this class?')">
+    Delete
+  </button>
+</form>
+
+      </td>
+    </tr>
+  <% }) %>
+</tbody>
+  </table>
+  <!-- ================= ADD CLASS MODAL ================= -->
+<div class="modal" id="subjectModal">
+    <form action="/admin/addSubject" method="post">
+        <h2>Add Subject</h2>
+        <input type="text" name="subjectName" placeholder="e.g. Mathematics" required>
+        <button>Submit</button>
+        <span class="close" onclick="closeAll()">×</span>
+    </form>
+</div>
+  
+    </div>
+    <script src="/scriptFolder/menuToggle.js"></script>
+    <script src="/scriptFolder/editAdminStudent.js"></script>
+    <script src="/scriptFolder/openModal.js"></script>
+    <script src="/scriptFolder/searchTable.js"></script>
+    <script src="/scriptFolder/showDate.js"></script>
+</body>
+</html>

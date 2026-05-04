@@ -1,0 +1,257 @@
+/* ===============================
+   GLOBAL RESET
+================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f5f7fb;
+  color: #222;
+}
+
+/* ===============================
+   DASHBOARD LAYOUT
+================================ */
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===============================
+   SIDEBAR
+================================ */
+.sidebar {
+  width: 240px;
+  background: #0f172a;
+  color: #fff;
+  padding: 20px;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.nav {
+  list-style: none;
+}
+
+.nav li {
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.nav li.active,
+.nav li:hover {
+  background: #1e293b;
+}
+
+.nav a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ===============================
+   MAIN CONTENT
+================================ */
+.content {
+  flex: 1;
+  padding: 20px;
+}
+
+/* ===============================
+   HEADER
+================================ */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 22px;
+}
+
+.role {
+  font-size: 14px;
+  color: #555;
+}
+
+/* ===============================
+   SCHOOL CARD
+================================ */
+.school-card {
+  background: #fff;
+  padding: 16px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.school-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.school-info img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* ===============================
+   INPUT TABLE
+================================ */
+.inputTable {
+  background: #fff;
+  padding: 16px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.inputTable select,
+.inputTable input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  width: 100%;
+}
+
+.subject-label {
+  grid-column: 1 / -1;
+  font-size: 14px;
+}
+
+/* ===============================
+   STUDENT LIST
+================================ */
+.students-list {
+  list-style: none;
+}
+
+.student-item {
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.student-header {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* ===============================
+   STUDENT FORM
+================================ */
+.student-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 8px;
+}
+
+.student-form input {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.save-btn {
+  grid-column: 1 / -1;
+  padding: 10px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.save-btn:hover {
+  background: #1d4ed8;
+}
+
+.status {
+  grid-column: 1 / -1;
+  font-size: 13px;
+}
+
+/* ===============================
+   HAMBURGER BUTTON
+================================ */
+.menu-toggle {
+  display: none;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #0f172a;
+}
+
+/* ===============================
+   MOBILE SIDEBAR
+================================ */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -260px;
+    height: 100%;
+    width: 240px;
+    z-index: 1000;
+    transition: left 0.3s ease;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .content {
+    padding-top: 70px;
+  }
+}
+
+/* Overlay when sidebar is open */
+.sidebar-overlay {
+  display: none;
+}
+
+.sidebar-overlay.active {
+  display: block;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 900;
+}
+
+
+/* ===============================
+   SMALL MOBILE
+================================ */
+@media (max-width: 480px) {
+  .student-form {
+    grid-template-columns: 1fr;
+  }
+
+  .school-info {
+    flex-direction: column;
+    text-align: center;
+  }
+}

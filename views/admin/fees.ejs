@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fees</title>
+    <link rel="stylesheet" href="/stylesheet/fees.css">
+    <link rel="stylesheet" href="/stylesheet/dashboard.css">
+    <link rel="stylesheet" href="/stylesheet/menuToggle.css">
+    <link rel="stylesheet" href="/stylesheet/table.css">
+    <link rel="stylesheet" href="/stylesheet/form.css">
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+
+</head>
+<body>
+    <div class="container_content">
+    <% if (schoolId){%>
+       <div class="dashboard">
+
+  <!-- Sidebar (UNCHANGED) -->
+  <aside class="sidebar">
+    <h2 class="logo">SchoolBase</h2>
+
+    <nav>
+      <a href="/admin">Dashboard</a>
+      <a href="/admin/student">Students</a>
+      <a href="/teachers">Teachers</a>
+      <a href="/sessions">Academic Sessions</a>
+      <a href="/classes">Classes</a>
+      <a href="/subjects">Subjects</a>
+      <a href="/fees" class="active">Fee Management</a>
+      <a href="/adminResult">Results</a>
+      <a href="/settings">Settings</a>
+    </nav>
+
+    <a href="/logout" class="logout">Logout</a>
+  </aside>
+
+  <!-- Main -->
+  <main class="content">
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+    <header class="topbar">
+      <h1>Fee Management</h1>
+      <span class="date" id="todayDate"></span>
+    </header>
+
+    <div style="
+  margin: 20px 0;
+  padding: 20px;
+  background: #0f5132;
+  color: white;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+">
+  <div>
+    <h2>School Fees Summary</h2>
+    <p>Total Students: <strong><%= totalStudents %></strong></p>
+    <p>Fee per Student: ₦<strong><%= feePerStudent %></strong></p>
+  </div>
+
+  <% if (paymentStatus === false){%>
+    <button
+    onclick="paySchoolFees()"
+    style="
+      background: #198754;
+      color: white;
+      font-size: 22px;
+      padding: 15px 25px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    "
+  >
+    Pay ₦<%= totalSchoolFee.toLocaleString() %>
+  </button>
+  <%}else{%>
+    <h2 style="color: rgb(75, 75, 211);">Paid Already</h2>
+  <%}%>
+  
+</div>
+
+
+    <%}else{%>
+      <p>unauthorized</p>
+    <%}%>
+</div>
+<!-- <script>
+  window.PAYSTACK_PUBLIC_KEY = "<%= paystackKey %>";
+</script> -->
+<script src="/scriptFolder/searchTable.js"></script>
+<script src="/scriptFolder/menuToggle.js"></script>
+
+<script>
+  window.PAYSTACK_KEY = "<%= paystackKey %>";
+  window.TOTAL_SCHOOL_FEE = "<%= totalSchoolFee %>";
+  window.SCHOOL_EMAIL = "<%= schoolEmail %>";
+</script>
+
+<script src="/scriptFolder/paySchool.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    
+  <link rel="stylesheet" href="/stylesheet/teacher-dashboard.css" />
+  <link rel="stylesheet" href="/stylesheet/table.css" />
+  <link rel="stylesheet" href="/stylesheet/form.css" />
+  <link rel="stylesheet" href="/stylesheet/menuToggle.css" />
+  <link rel="stylesheet" href="/stylesheet/Psychomotor.css" />
+</head>
+<body>
+    <div class="dashboard">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2 class="logo">SchoolBase</h2>
+
+    <ul class="nav">
+      <a href="/teacherDashboard"><li>Dashboard</li></a>
+      <a href="/teacherClass/<%= classAssigned._id %>"><li>My Class</li></a>
+      <a href="/teacherPsychomotor">
+        <li class="active">Psychomotor</li>
+      </a>
+      <a href="/teacherRemark"><li>Remark</li></a>
+      <a href="/teacherResult"><li>Results</li></a>
+      <a href="/teacherLogin/logout"><li>Logout</li></a>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+    <!-- Header -->
+        <header class="header">
+            <button class="menu-toggle" id="menuToggle">☰</button>
+            <div>
+                <h2>Psychomotor & Behaviour Assessment</h2>
+            </div>
+        </header>
+    
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar" style="margin-bottom:20px;">
+      <select id="studentSelect" style="padding: 5px;">
+  <option value="">Select Student</option>
+  <% students.forEach(s => { %>
+    <option value="<%= s._id %>"><%= s.studentFullName %></option>
+  <% }) %>
+</select>
+
+<select id="academicSessionSelect" style="padding: 5px;">
+  <option value="">Select Session</option>
+  <% sessions.forEach(s => { %>
+    <option value="<%= s._id %>"><%= s.academicSession %></option>
+  <% }) %>
+</select>
+
+<select id="termSelect" style="padding: 5px;">
+  <option value="">Select Term</option>
+  <option value="term1">First Term</option>
+  <option value="term2">Second Term</option>
+  <option value="term3">Third Term</option>
+</select>
+
+    </div>
+
+    <!-- FORM -->
+    <div class="psychomotorForm">
+
+      <h3 class="section-title">Psychomotor Skills</h3>
+      <div class="psy-grid">
+        <div class="psyCon"><label>Handwriting</label><input type="number" min="1" max="5" id="handwriting"></div>
+        <div class="psyCon"><label>Fluency</label><input type="number" min="1" max="5" id="fluency"></div>
+        <div class="psyCon"><label>Sports</label><input type="number" min="1" max="5" id="sports"></div>
+        <div class="psyCon"><label>Handling of Tools</label><input type="number" min="1" max="5" id="handlingOfTools"></div>
+        <div class="psyCon"><label>Drawing & Painting</label><input type="number" min="1" max="5" id="drawing"></div>
+        <div class="psyCon"><label>Crafts</label><input type="number" min="1" max="5" id="crafts"></div>
+      </div>
+
+      <h3 class="section-title">Behaviour</h3>
+      <div class="psy-grid">
+        <div class="psyCon"><label>Punctuality</label><input type="number" min="1" max="5" id="punctuality"></div>
+        <div class="psyCon"><label>Attendance</label><input type="number" min="1" max="5" id="attendanceAtClass"></div>
+        <div class="psyCon"><label>Reliability</label><input type="number" min="1" max="5" id="reliability"></div>
+        <div class="psyCon"><label>Honesty</label><input type="number" min="1" max="5" id="honesty"></div>
+        <div class="psyCon"><label>Relationship with Staff</label><input type="number" min="1" max="5" id="relationshipWithStaff"></div>
+        <div class="psyCon"><label>Relationship with Students</label><input type="number" min="1" max="5" id="relationshipWithOtherStudents"></div>
+        <div class="psyCon"><label>Co-operation</label><input type="number" min="1" max="5" id="spiritOfCooperation"></div>
+        <div class="psyCon"><label>Responsibility</label><input type="number" min="1" max="5" id="senseOfResponsibility"></div>
+        <div class="psyCon"><label>Attentiveness</label><input type="number" min="1" max="5" id="attentiveness"></div>
+        <div class="psyCon"><label>Organization</label><input type="number" min="1" max="5" id="organizationalAbility"></div>
+        <div class="psyCon"><label>Perseverance</label><input type="number" min="1" max="5" id="perseverance"></div>
+        <div class="psyCon"><label>Self Control</label><input type="number" min="1" max="5" id="selfControl"></div>
+      </div>
+      <button class="shiny-btn" onclick="savePsychomotor()">Save Assessment</button>
+    </div>
+  </main>
+</div>
+<script src="/scriptFolder/menuToggle.js"></script>
+<script>
+function savePsychomotor() {
+  const payload = {
+    studentId: document.getElementById('studentSelect').value,
+    academicSessionId: document.getElementById('academicSessionSelect').value,
+    term: document.getElementById('termSelect').value,
+
+    handwriting: handwriting.value,
+    fluency: fluency.value,
+    sports: sports.value,
+    handlingOfTools: handlingOfTools.value,
+    drawing: drawing.value,
+    crafts: crafts.value,
+
+    punctuality: punctuality.value,
+    attendanceAtClass: attendanceAtClass.value,
+    reliability: reliability.value,
+    honesty: honesty.value,
+    relationshipWithStaff: relationshipWithStaff.value,
+    relationshipWithOtherStudents: relationshipWithOtherStudents.value,
+    spiritOfCooperation: spiritOfCooperation.value,
+    senseOfResponsibility: senseOfResponsibility.value,
+    attentiveness: attentiveness.value,
+    organizationalAbility: organizationalAbility.value,
+    perseverance: perseverance.value,
+    selfControl: selfControl.value
+  };
+
+  fetch('/teacherPsychomotor/save', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert('Psychomotor assessment saved');
+    } else {
+      alert(data.message || 'Failed to save');
+    }
+  });
+}
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  const studentSelect = document.getElementById('studentSelect');
+  const sessionSelect = document.getElementById('academicSessionSelect');
+  const termSelect = document.getElementById('termSelect');
+
+  if (!studentSelect || !sessionSelect || !termSelect) {
+    console.error('Select elements not found');
+    return;
+  }
+
+  const fields = [
+    'handwriting','fluency','sports','handlingOfTools','drawing','crafts',
+    'punctuality','attendanceAtClass','reliability','honesty',
+    'relationshipWithStaff','relationshipWithOtherStudents',
+    'spiritOfCooperation','senseOfResponsibility','attentiveness',
+    'organizationalAbility','perseverance','selfControl'
+  ];
+
+  function clearForm() {
+    fields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+  }
+
+  async function loadPsychomotor() {
+    const studentId = studentSelect.value;
+    const academicSessionId = sessionSelect.value;
+    const term = termSelect.value;
+
+    if (!studentId || !academicSessionId || !term) {
+      clearForm();
+      return;
+    }
+
+    const res = await fetch(
+      `/teacherPsychomotor/load?studentId=${studentId}&academicSessionId=${academicSessionId}&term=${term}`
+    );
+
+    const data = await res.json();
+    console.log('Psychomotor data:', data);
+
+    if (!data.exists) {
+      clearForm();
+      return;
+    }
+
+    Object.entries(data.psychomotor || {}).forEach(([k, v]) => {
+      const el = document.getElementById(k);
+      if (el) el.value = v;
+    });
+
+    Object.entries(data.behaviour || {}).forEach(([k, v]) => {
+      const el = document.getElementById(k);
+      if (el) el.value = v;
+    });
+  }
+
+  studentSelect.addEventListener('change', loadPsychomotor);
+  sessionSelect.addEventListener('change', loadPsychomotor);
+  termSelect.addEventListener('change', loadPsychomotor);
+});
+</script>
+
+</body>
+</html>

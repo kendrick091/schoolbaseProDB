@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheet/teacher-dashboard.css">
+</head>
+<body>
+
+<div class="dashboard">
+    
+    <% if (role === "subjectTeacher") {%>
+        <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">SchoolBase</h2>
+
+        <ul class="nav">
+            <li class="active">Dashboard</li>
+            <a href="/teacherLogin/logout"><li>Logout</li></a>
+        </ul>
+    </aside>
+
+        <!-- Main Content -->
+    <main class="content">
+
+        <!-- Header -->
+        <header class="header">
+            <button class="menu-toggle" id="menuToggle">☰</button>
+            <div>
+                <h1>Welcome, <%= teacher.teacherName %></h1>
+                <p class="role">
+                <%= teacher.teacherRole %>
+                <% if (subject) { %>
+                    — <span class="subject"><%= subject.subjectName %></span>
+                <% } %>
+        </p>
+
+            </div>
+        </header>
+
+        <!-- School Info Card -->
+        <section class="card school-card">
+            <div class="school-info">
+                <img 
+                  src="<%= school?.schoolLogo || '/images/default-school.png' %>" 
+                  alt="School Logo"
+                >
+                <div>
+                    <h2><%= school?.schoolname || 'School Name' %></h2>
+                    <p><%= school?.address || 'School Address' %></p>
+                    <p class="email"><%= school?.email %></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="inputTable">
+
+    <!-- Subject (Fixed) -->
+    <input 
+        type="hidden" 
+        id="subject" 
+        value="<%= subject._id %>"
+    >
+
+    <p class="subject-label">
+        Subject: <strong><%= subject.subjectName %></strong>
+    </p>
+
+    <!-- Class -->
+    <select id="classSelect">
+        <option value="">-- Select Class --</option>
+        <% if (classList && classList.length > 0) { %>
+            <% classList.forEach(cls => { %>
+                <option value="<%= cls._id %>"><%= cls.className %></option>
+            <% }) %>
+        <% } %>
+    </select>
+
+    <!-- Term -->
+    <select id="termSelect">
+        <option value="">-- Select Term --</option>
+        <option value="term1">First Term</option>
+        <option value="term2">Second Term</option>
+        <option value="term3">Third Term</option>
+    </select>
+
+</section>
+
+<ul id="studentsList" class="students-list">
+    <!-- Students will be injected here -->
+</ul>
+
+
+    </main>
+    <%}else{%>
+        <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">SchoolBase</h2>
+
+        <ul class="nav">
+            <a href="/teacherDashboard"><li class="active">Dashboard</li></a>
+            <a href="/teacherClass/<%= classAssigned._id %>"><li>My Class</li></a>
+            <a href="/teacherPsychomotor"><li>Psychomotor</li></a>
+            <a href="/teacherRemark"><li>Remark</li></a>
+            <a href="/teacherResult"><li>Results</li></a>
+            <a href="/teacherLogin/logout"><li>Logout</li></a>
+        </ul>
+    </aside>
+
+      <!-- Main Content -->
+    <main class="content">
+
+        <!-- Header -->
+        <header class="header">
+            <button class="menu-toggle" id="menuToggle">☰</button>
+            <div>
+                <h1>Welcome, <%= teacher.teacherName %></h1>
+                <p class="role"><%= teacher.teacherRole %>
+                     <%= classAssigned?.className %></p>
+            </div>
+        </header>
+
+        <!-- School Info Card -->
+        <section class="card school-card">
+            <div class="school-info">
+                <img 
+                  src="<%= school?.schoolLogo || '/images/default-school.png' %>" 
+                  alt="School Logo"
+                >
+                <div>
+                    <h2><%= school?.schoolname || 'School Name' %></h2>
+                    <p><%= school?.address || 'School Address' %></p>
+                    <p class="email"><%= school?.email %></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="inputTable">
+
+  <!-- CLASS TEACHER: can choose subject -->
+    <select id="subject">
+        <option value="">-- Select Subject --</option>
+        <% if (subjects && subjects.length > 0) { %>
+            <% subjects.forEach(sub => { %>
+                <option value="<%= sub._id %>">
+                    <%= sub.subjectName %>
+                </option>
+            <% }) %>
+        <% } %>
+    </select>
+
+    <!-- Class -->
+    <select id="classSelect">
+        <option value="<%= classAssigned._id %>">
+            <%= classAssigned.className %>
+        </option>
+    </select>
+
+    <!-- Term -->
+    <select id="termSelect">
+        <option value="">-- Select Term --</option>
+        <option value="term1">First Term</option>
+        <option value="term2">Second Term</option>
+        <option value="term3">Third Term</option>
+    </select>
+
+</section>
+
+<ul id="studentsList" class="students-list">
+    <!-- Students will be injected here -->
+</ul>
+
+    </main>
+
+    <%}%>
+
+</div>
+<script src="/scriptFolder/teacherInput.js"></script>
+<script src="/scriptFolder/menuToggle.js"></script>
+</body>
+</html>

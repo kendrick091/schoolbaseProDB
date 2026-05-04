@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheet/dashboard.css">
+    <link rel="stylesheet" href="/stylesheet/menuToggle.css">
+    <link rel="stylesheet" href="/stylesheet/settings.css">
+</head>
+<body>
+   <div class="dashboard">
+
+  <!-- Sidebar (UNCHANGED) -->
+  <aside class="sidebar">
+    <h2 class="logo">SchoolBase</h2>
+
+    <nav>
+      <a href="/admin">Dashboard</a>
+      <a href="/admin/student">Students</a>
+      <a href="/teachers">Teachers</a>
+      <a href="/sessions">Academic Sessions</a>
+      <a href="/classes">Classes</a>
+      <a href="/subjects">Subjects</a>
+      <a href="/fees">Fee Management</a>
+      <a href="/adminResult">Results</a>
+      <a href="/settings" class="active">Settings</a>
+    </nav>
+
+    <a href="/logout" class="logout">Logout</a>
+  </aside>
+
+  <!-- Main -->
+  <main class="content">
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+  <h1>Settings</h1>
+
+  <form action="/settings/update" method="POST" class="settings-form">
+
+    <!-- Code to update school name, email etc --->
+    <div class="card">
+      <div class="remark-row">
+        <h3>Update School Name</h3>
+        <label>School Name</label>
+        <input type="text" name="updatedName" value="<%= school.schoolname %>">
+
+        <label>Update School Address</label>
+        <input type="text" name="updatedAddress" value="<%= school.address %>">
+        
+        <label>Update Gmail</label>
+        <input type="email" name="updatedEmail" value="<%= school.email %>">
+      </div>
+    </div>
+
+    <!-- RESULT TYPE -->
+    <div class="card">
+      <h3>Result Type</h3>
+      <p>Select how student results should be displayed.</p>
+
+      <label>
+        <input type="radio" name="resultView" value="1"
+          <%= school.resultView === 1 ? 'checked' : '' %>>
+        Type 1 = 2 CA + Exam + Remark Breakdown
+      </label>
+
+      <label>
+        <input type="radio" name="resultView" value="2"
+          <%= school.resultView === 2 ? 'checked' : '' %>>
+        Type 2 = 3 CA + Exam + Remarks Breakdown
+      </label>
+
+      <label>
+        <input type="radio" name="resultView" value="3"
+          <%= school.resultView === 3 ? 'checked' : '' %>>
+        Type 3 = 4 CA + Exam + Remarks Breakdown
+      </label>
+    </div>
+
+    <!-- POSITION SETTING -->
+    <div class="card">
+      <h3>Student Position (Class Rank)</h3>
+      <p>Enable or disable class position on results.</p>
+
+      <label class="switch">
+        <input type="checkbox" name="positionView"
+          <%= school.positionView ? 'checked' : '' %>>
+        <span class="slider"></span>
+      </label>
+
+      <span class="status">
+        <%= school.positionView ? 'Enabled' : 'Disabled' %>
+      </span>
+    </div>
+
+    <!-- GRADE REMARK SETTINGS -->
+<div class="card">
+  <h3>Grade Remarks</h3>
+  <p>Set remarks that appear on student results based on grades.</p>
+
+  <div class="grade-remarks">
+
+    <div class="remark-row">
+      <label>Grade A (75 – 100)</label>
+      <input type="text" name="remarks[A]"
+        value="<%= school.gradeRemarks?.A || '' %>"
+        placeholder="e.g. Excellent performance">
+    </div>
+
+    <div class="remark-row">
+      <label>Grade B (65 – 74)</label>
+      <input type="text" name="remarks[B]"
+        value="<%= school.gradeRemarks?.B || '' %>"
+        placeholder="e.g. Very good">
+    </div>
+
+    <div class="remark-row">
+      <label>Grade C (50 – 64)</label>
+      <input type="text" name="remarks[C]"
+        value="<%= school.gradeRemarks?.C || '' %>"
+        placeholder="e.g. Good effort">
+    </div>
+
+    <div class="remark-row">
+      <label>Grade D (40 – 49)</label>
+      <input type="text" name="remarks[D]"
+        value="<%= school.gradeRemarks?.D || '' %>"
+        placeholder="e.g. Needs improvement">
+    </div>
+
+    <div class="remark-row">
+      <label>Grade F (0 – 39)</label>
+      <input type="text" name="remarks[F]"
+        value="<%= school.gradeRemarks?.F || '' %>"
+        placeholder="e.g. Fail">
+    </div>
+
+  </div>
+</div>
+
+
+    <button type="submit" class="btn-save">Save Settings</button>
+  </form>
+</main>
+
+</div>
+<script src="/scriptFolder/searchTable.js"></script>
+<script src="/scriptFolder/menuToggle.js"></script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+
+.schoolInfo{
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+}
+
+.logo{
+    /* background: rgb(230, 227, 227); */
+    width: 15%;
+    /* height: 75px; */
+}
+
+.logo img{
+    width: 100%;
+}
+
+.schoolHead{
+    text-align: center;
+    padding-top: 15px;
+    width: 70%;
+}
+
+.schoolHead .headSchoolName{
+  font-size: 23px;
+  font-weight: bolder;
+}
+
+.schoolHead .headSchoolAddress{
+  font-size: 18px;
+  font-weight: bold;
+}
+
+th, td{
+    outline: 1px solid black;
+}
+
+.caTd{
+    text-align: center;
+}
+
+.header-table {
+  border-collapse: collapse;
+  width: 48%;
+}
+
+.header-table td {
+  border: 1px solid #000;
+  padding: 6px 10px;
+  font-size: 14px;
+}
+
+.displayPsychomotor{
+    display: flex;
+    font-size: 11px;
+}
+
+.cumulative-headers{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.cumulative-header{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+button{
+    background: blue;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+@media print {
+  .result-header {
+    margin-bottom: 10px;
+  }
+
+  .selectorDiv, button{
+    display: none;
+  }
+  
+}

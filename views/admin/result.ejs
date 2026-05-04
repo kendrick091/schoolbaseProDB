@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheet/fees.css">
+    <link rel="stylesheet" href="/stylesheet/dashboard.css">
+    <link rel="stylesheet" href="/stylesheet/menuToggle.css">
+    <link rel="stylesheet" href="/stylesheet/table.css">
+    <link rel="stylesheet" href="/stylesheet/form.css">
+
+</head>
+<body>
+    <div class="container_content">
+    <% if (action === 'listC'){%>
+           <div class="dashboard">
+
+  <!-- Sidebar (UNCHANGED) -->
+  <aside class="sidebar">
+    <h2 class="logo">SchoolBase</h2>
+
+    <nav>
+      <a href="/admin">Dashboard</a>
+      <a href="/admin/student">Students</a>
+      <a href="/teachers">Teachers</a>
+      <a href="/sessions">Academic Sessions</a>
+      <a href="/classes">Classes</a>
+      <a href="/subjects">Subjects</a>
+      <a href="/fees">Fee Management</a>
+      <a href="/adminResult" class="active">Results</a>
+      <a href="/settings">Settings</a>
+    </nav>
+
+    <a href="/logout" class="logout">Logout</a>
+  </aside>
+
+  <!-- Main -->
+  <main class="content">
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+        <h3><%= title %></h3>
+        <section class="table-section">
+  <div class="table-header">
+    <h2>Classes</h2>
+
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search Class..."
+      onkeyup="searchTable()"
+    />
+  </div>
+
+  <div class="table-wrapper">
+  <table id="studentTable">
+    <thead>
+      <tr>
+        <th onclick="sortTable(1)">Class ⬍</th>
+        <th>No. of Stud.</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+  <% listClass.forEach((classItem) => { %>
+    <tr>
+      <td><%= classItem.className %></td>
+
+      <td>
+        <%= classItem.studentCount %>
+      </td>
+
+      <td class="actions">
+        <a href="/adminResult/more/<%= classItem._id %>">
+          <button class="btn info">Info</button>
+        </a>
+
+      </td>
+    </tr>
+  <% }) %>
+</tbody>
+
+  </table>
+    </div>
+    </section>
+    </main>
+    </div>
+    <%}else{%>
+       <div class="dashboard">
+
+  <!-- Sidebar (UNCHANGED) -->
+  <aside class="sidebar">
+    <h2 class="logo">SchoolBase</h2>
+
+    <nav>
+      <a href="/admin">Dashboard</a>
+      <a href="/admin/student">Students</a>
+      <a href="/teachers">Teachers</a>
+      <a href="/sessions">Academic Sessions</a>
+      <a href="/classes">Classes</a>
+      <a href="/subjects">Subjects</a>
+      <a href="/fees">Fee Management</a>
+      <a href="/adminResult" class="active">Results</a>
+      <a href="/settings">Settings</a>
+    </nav>
+
+    <a href="/logout" class="logout">Logout</a>
+  </aside>
+
+  <!-- Main -->
+  <main class="content">
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+    <header class="topbar">
+      <h1><%= classInfo.className %></h1>
+      <span class="date" id="todayDate"></span>
+    </header>
+
+     <!-- <div class="filter-bar" style="display:flex; gap:15px; margin-bottom:15px;">
+
+  
+  <select id="academicSession" required style="padding: 10px;">
+  <option value="">Select Academic Session</option>
+
+  <% if (sessions && sessions.length > 0) { %>
+    <% sessions.forEach(session => { %>
+      <option value="<%= session._id %>">
+        <%= session.academicSession %>
+      </option>
+    <% }) %>
+  <% } else { %>
+    <option disabled>No sessions available</option>
+  <% } %>
+</select>
+
+  
+  <select id="term" required style="padding: 10px;">
+    <option value="">Select Term</option>
+    <option value="term1">First Term</option>
+    <option value="term2">Second Term</option>
+    <option value="term3">Third Term</option>
+  </select>
+
+</div> -->
+
+
+    <section class="table-section">
+  <div class="table-header">
+    <h2>Students</h2>
+
+   
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search student..."
+      onkeyup="searchTable()"
+    />
+  </div>
+
+  <div class="table-wrapper">
+  <table id="studentTable">
+    <thead>
+  <tr>
+    <th>
+      <input type="checkbox" onclick="toggleAll(this)" />
+    </th>
+    <th>Name</th>
+    <th>Session</th>
+    <th>Fee</th>
+    <th>Action</th>
+  </tr>
+</thead>
+
+<tbody>
+  <% students.forEach(student => { %>
+    <tr>
+      <td>
+       <% if (!student.payment) { %>
+    <input type="checkbox" class="student-checkbox" value="<%= student._id %>">
+    <% } %>
+
+      </td>
+
+      <td><%= student.studentFullName %></td>
+
+      <td><%= student.sessionName || '—' %></td>
+
+      <td>
+        <% if (student.payment === true){%>
+            <span style="color: green;">Paid</span>
+        <%}else{%>
+            <span style="color: red;">Unpaid</span>
+        <%}%>
+      </td>
+
+      <td>
+         <a href="/adminStudentResult/<%= student._id %>">
+          <button style="background:#007780; 
+        color:white; padding:6px 10px;">
+          View Result
+        </button></a>
+      </td>
+    </tr>
+  <% }) %>
+</tbody>
+
+  </table>
+  <% if (showUser.payment !== false){%>
+    <button
+  onclick="updatePayment(true)"
+  style="background:green;color:white;padding:10px 15px;"
+>
+Mark as Paid
+</button>
+  <%}else{%>
+    <h3 style="color: white; background: red;
+    padding: 10px;">Pay to edit Student Fee Status</h3>
+ <%}%>
+ 
+
+    </div>
+
+  <div id="pagination"></div>
+  </section>
+  </main>
+</div>
+    <%}%>
+</div>
+<script src="/scriptFolder/searchTable.js"></script>
+<script src="/scriptFolder/menuToggle.js"></script>
+
+<script src="/scriptFolder/viewResult.js"></script>
+
+
+<script>
+    function toggleAll(source) {
+  document.querySelectorAll('.student-checkbox').forEach(cb => {
+    cb.checked = source.checked;
+  });
+}
+
+function updatePayment(paymentStatus) {
+  const selected = [...document.querySelectorAll('.student-checkbox:checked')];
+
+  if (selected.length === 0) {
+    alert('Select at least one student');
+    return;
+  }
+
+  const studentIds = selected.map(cb => cb.value);
+
+  fetch('/adminResult/update-payment', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ studentIds, paymentStatus })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert('Payment updated successfully');
+      location.reload();
+    } else {
+      alert(data.message || 'Failed to update');
+    }
+  });
+}
+</script>
+
+</body>
+</html>

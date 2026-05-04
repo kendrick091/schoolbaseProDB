@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheet/dashboard.css">
+    <link rel="stylesheet" href="/stylesheet/menuToggle.css">
+    <link rel="stylesheet" href="/stylesheet/form.css">
+</head>
+<body>
+    <% if (action === "student"){%>
+           <div class="dashboard">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">SchoolBase</h2>
+
+        <nav>
+            <a href="/admin">Dashboard</a>
+            <a href="/admin/student" class="active">Students</a>
+            <a href="/teachers">Teachers</a>
+            <a href="/sessions">Academic Sessions</a>
+            <a href="/classes">Classes</a>
+            <a href="/results">Results</a>
+            <a href="/settings">Settings</a>
+        </nav>
+
+        <a href="/logout" class="logout">Logout</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+        <header class="topbar">
+            <h3><%= student.studentFullName %></h3>
+            <h1>Student Management</h1>
+            <span class="date" id="todayDate"></span>
+        </header>
+
+        <!-- edit student info ---- -->
+        <section>
+            <form action="/edit/<%= student._id %>" method="post">
+        <h2>Edit Student</h2>
+         
+        <input type="hidden" name="payment" value="<%= student.payment %>">
+        <input type="text" name="studentFullName" value="<%= student.studentFullName %>" required>
+
+        <label for="">Gender</label>
+        <select name="gender" id="">
+            <option value="<%= student.gender %>"><%= student.gender %></option>
+            <% if (student.gender === "male"){%>
+                <option value="female">female</option>
+            <%}else{%>
+                <option value="male">male</option>
+            <%}%>
+        </select>
+        <label for="">Edit Class</label>
+
+        <select name="studentClass" required>
+  <% classesList.forEach((classItem) => { %>
+    <option 
+      value="<%= classItem._id %>"
+      <%= student.studentClass.toString() === classItem._id.toString() ? 'selected' : '' %>
+    >
+      <%= classItem.className %>
+    </option>
+  <% }); %>
+</select>
+
+        <button>Submit</button>
+    </form>
+
+        </section>
+        </main>
+        </div>
+    <%}else if(action === "teacher"){%>
+            <div class="dashboard">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">SchoolBase</h2>
+
+        <nav>
+            <a href="/admin">Dashboard</a>
+            <a href="/admin/student">Students</a>
+            <a href="/teachers" class="active">Teachers</a>
+            <a href="/sessions">Academic Sessions</a>
+            <a href="/classes">Classes</a>
+            <a href="/subjects">Subjects</a>
+            <a href="/fees">Fee Management</a>
+            <a href="/adminResult">Results</a>
+            <a href="/settings">Settings</a>
+        </nav>
+
+        <a href="/logout" class="logout">Logout</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+        <header class="topbar">
+            <h3><%= teacher.teacherName %></h3>
+            <h1>Teacher Management</h1>
+            <span class="date" id="todayDate"></span>
+        </header>
+        <section>
+        <form action="/edit/teacher/<%= teacher._id %>" method="post">
+        <h2>Edit Teacher</h2>
+        <input type="hidden" name="schoolID" value="<%= showUser._id %>">
+        <input type="text" name="teacherName" value="<%= teacher.teacherName %>" required>
+        <input type="text" name="phoneNo" value="<%= teacher.phoneNo %>" required>
+       <select name="teacherRole" id="teacherRole">
+  <option value="classTeacher" 
+    <%= teacher.teacherRole === 'classTeacher' ? 'selected' : '' %>>
+    Class Teacher
+  </option>
+  <option value="subjectTeacher" 
+    <%= teacher.teacherRole === 'subjectTeacher' ? 'selected' : '' %>>
+    Subject Teacher
+  </option>
+</select>
+
+<select name="classAssigned" id="assignClass">
+  <option value="">Assign Class to Teacher</option>
+  <% classesList.forEach((classItem) => { %>
+    <option value="<%= classItem._id %>"
+      <%= teacher.classAssigned?.toString() === classItem._id.toString() ? 'selected' : '' %>>
+      <%= classItem.className %>
+    </option>
+  <% }); %>
+</select>
+
+<select name="subjectAssigned" id="assignSubject">
+  <option value="">Assign Subject to Teacher</option>
+  <% subject.forEach((subjectItem) => { %>
+    <option value="<%= subjectItem._id %>"
+      <%= teacher.subjectAssigned?.toString() === subjectItem._id.toString() ? 'selected' : '' %>>
+      <%= subjectItem.subjectName %>
+    </option>
+  <% }); %>
+</select>
+
+    <!-- </div> -->
+        <button>Submit</button>
+        <span class="close" onclick="closeAll()">×</span>
+    </form>
+    </section>
+    </main>
+    </div>
+    <%}else if (action === "class"){%>
+      <div class="dashboard">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">SchoolBase</h2>
+
+        <nav>
+            <a href="/admin">Dashboard</a>
+            <a href="/admin/student">Students</a>
+            <a href="/teachers" class="active">Teachers</a>
+            <a href="/sessions">Academic Sessions</a>
+            <a href="/classes">Classes</a>
+            <a href="/fees">Fee Management</a>
+            <a href="/adminResults">Results</a>
+            <a href="/settings">Settings</a>
+        </nav>
+
+        <a href="/logout" class="logout">Logout</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+        <header class="topbar">
+            <h3><%= classInfo.className %></h3>
+            <h1>Class Management</h1>
+            <span class="date" id="todayDate"></span>
+        </header>
+        <section>
+        <form action="/edit/class/<%= classInfo._id %>" method="post">
+        <h2>Edit Class</h2>
+        <input type="text" name="className" value="<%= classInfo.className %>" required>
+        <button>Submit</button>
+    </form>
+    </section>
+        </main>
+        </div>
+
+    <%}else if(action === 'subjects'){%>
+      <div class="dashboard">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">SchoolBase</h2>
+
+        <nav>
+            <a href="/admin">Dashboard</a>
+            <a href="/admin/student">Students</a>
+            <a href="/teachers" class="active">Teachers</a>
+            <a href="/sessions">Academic Sessions</a>
+            <a href="/classes">Classes</a>
+            <a href="/fees">Fee Management</a>
+            <a href="/adminResults">Results</a>
+            <a href="/settings">Settings</a>
+        </nav>
+
+        <a href="/logout" class="logout">Logout</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+        <header class="topbar">
+            <h3><%= subjectInfo.subjectName %></h3>
+            <h1>Subject Management</h1>
+            <span class="date" id="todayDate"></span>
+        </header>
+        <section>
+        <form action="/edit/subject/<%= subjectInfo._id %>" method="post">
+        <h2>Edit Subject</h2>
+        <input type="text" name="subjectName" value="<%= subjectInfo.subjectName %>" required>
+        <button>Submit</button>
+    </form>
+    </section>
+        </main>
+        </div>
+    <%}else{%>
+      <div class="dashboard">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">SchoolBase</h2>
+
+        <nav>
+            <a href="/admin">Dashboard</a>
+            <a href="/admin/student">Students</a>
+            <a href="/teachers">Teachers</a>
+            <a href="/sessions" class="active">Academic Sessions</a>
+            <a href="/classes">Classes</a>
+            <a href="/fees">Fee Management</a>
+            <a href="/adminResults">Results</a>
+            <a href="/settings">Settings</a>
+        </nav>
+
+        <a href="/logout" class="logout">Logout</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+        <header class="topbar">
+            <h3><%= session.academicSession %></h3>
+            <h1>Session Management</h1>
+            <span class="date" id="todayDate"></span>
+        </header>
+        <section>
+        <form action="/edit/session/<%= session._id %>" method="post">
+        <h2>Edit Session</h2>
+        <label for="">Academic Session</label>
+        <input type="text" name="academicSessionInput" value="<%= session.academicSession %>" required>
+        <label for="">1st Term Vacation</label>
+        <input type="text" name="firstTermVacate" value="<%= session.firstTermVacate %>" >
+        <label for="">2nd Term Resumption</label>
+        <input type="text" name="secondTermResume" value="<%= session.secondTermResume %>" >
+        <label for="">2nd Term Vacation</label>
+        <input type="text" name="secondTermVacate" value="<%= session.secondTermVacate %>" >
+        <label for="">3rd Term Resumption</label>
+        <input type="text" name="thirdTermResume" value="<%= session.thirdTermResume %>" >
+        <label for="">3rd Term Vacation</label>
+        <input type="text" name="thirdTermVacate" value="<%= session.thirdTermVacate %>" >
+        <label for="">Next Session Resumption</label>
+        <input type="text" name="nextSessionResume" value="<%= session.firstTermResume %>" >
+        <button>Submit</button>
+    </form>
+    </section>
+        </main>
+        </div>
+    <%}%> 
+    <script src="/scriptFolder/menuToggle.js"></script>
+    <script src="/scriptFolder/editAdminStudent.js"></script>
+    <script src="/scriptFolder/openModal.js"></script>
+    <script src="/scriptFolder/searchTable.js"></script>
+    <script src="/scriptFolder/showDate.js"></script>
+</body>
+</html>

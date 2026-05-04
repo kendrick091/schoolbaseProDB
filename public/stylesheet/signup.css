@@ -1,0 +1,111 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", system-ui, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f172a, #020617);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: 420px;
+    padding: 20px;
+}
+
+/* Card */
+.auth-card {
+    background: #020617;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 25px 60px rgba(0,0,0,.5);
+    color: #e5e7eb;
+}
+
+/* Header */
+.brand {
+    text-align: center;
+    color: #38bdf8;
+    margin-bottom: 6px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #94a3b8;
+    margin-bottom: 24px;
+    font-size: 14px;
+}
+
+/* Inputs */
+.input-group {
+    margin-bottom: 16px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #1e293b;
+    background: #020617;
+    color: #e5e7eb;
+}
+
+.input-group input::placeholder {
+    color: #64748b;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #38bdf8;
+}
+
+/* File upload */
+.file-upload label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+.file-upload input {
+    padding: 10px;
+    cursor: pointer;
+}
+
+/* Button */
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background: #38bdf8;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.submit-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(56,189,248,.4);
+}
+
+/* Link */
+.sign-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.sign-link:hover {
+    color: #38bdf8;
+}

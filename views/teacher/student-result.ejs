@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Result check</title>
+    <link rel="stylesheet" href="/stylesheet/fees.css">
+    <link rel="stylesheet" href="/stylesheet/teacher-dashboard.css">
+    <link rel="stylesheet" href="/stylesheet/menuToggle.css">
+    <link rel="stylesheet" href="/stylesheet/table.css">
+    <link rel="stylesheet" href="/stylesheet/form.css">
+</head>
+<body>
+    <div class="dashboard">
+      <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2 class="logo">SchoolBase</h2>
+
+    <ul class="nav">
+      <a href="/teacherDashboard"><li>Dashboard</li></a>
+      <a href="/teacherClass/<%= teacherClass._id %>"><li>My Class</li></a>
+      <a href="/teacherPsychomotor">
+        <li>Psychomotor</li>
+      </a>
+      <a href="/teacherRemark"><li>Remark</li></a>
+      <a href="/teacherResult"><li class="active">Results</li></a>
+      <a href="/teacherLogin/logout"><li>Logout</li></a>
+    </ul>
+  </aside>
+         <!-- Main -->
+  <main class="content">
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <h2><%= student.studentFullName %></h2>
+<p>Term: <strong><%= term %></strong></p>
+
+<% if (!results.length) { %>
+  <p style="color:red;">No result available.</p>
+<% } else { %>
+
+    <div class="table-wrapper">
+<table border="1">
+  <thead>
+    <tr>
+      <th>Subject</th>
+      <th>CA1</th>
+      <th>CA2</th>
+      <th>CA3</th>
+      <th>CA4</th>
+      <th>Exam</th>
+      <th>Total</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% results.forEach(r => { %>
+      <tr>
+        <td><%= r.subject.subjectName %></td>
+        <td><%= r.ca1 %></td>
+        <td><%= r.ca2 %></td>
+        <td><%= r.ca3 %></td>
+        <td><%= r.ca4 %></td>
+        <td><%= r.exam %></td>
+        <td><%= r.total %></td>
+        <td><a href="/teacherResult/delete/<%= r._id %>"
+          onclick="return confirm('Delete this subject result?')">
+          Delete
+      </a></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+</div>
+
+<p>
+  <strong>Position:</strong>
+  <!-- <%= positionInClass %> / <%= totalStudents %> -->
+  <%= positionInClass === 1 ? '1st'
+  : positionInClass === 2 ? '2nd'
+  : positionInClass === 3 ? '3rd'
+  : positionInClass + 'th' %>
+</p>
+
+
+<p><strong>Grand Total:</strong> <%= totalScore %></p>
+<p><strong>Average:</strong> <%= average %></p>
+
+<% } %>
+  </main>
+
+</div>
+<script src="/scriptFolder/searchTable.js"></script>
+<script src="/scriptFolder/menuToggle.js"></script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheet/dashboard.css">
+    <link rel="stylesheet" href="/stylesheet/menuToggle.css">
+    <link rel="stylesheet" href="/stylesheet/overlay.css">
+    <link rel="stylesheet" href="/stylesheet/table.css">
+</head>
+<body>
+    <% if (showUser){%>
+        <div class="dashboard">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">SchoolBase</h2>
+
+        <nav>
+            <a href="/admin">Dashboard</a>
+            <a href="/admin/student" class="active">Students</a>
+            <a href="/teachers">Teachers</a>
+            <a href="/sessions">Academic Sessions</a>
+            <a href="/classes">Classes</a>
+            <a href="/subjects">Subjects</a>
+            <a href="/fees">Fee Management</a>
+            <a href="/adminResult">Results</a>
+            <a href="/settings">Settings</a>
+        </nav>
+
+        <a href="/logout" class="logout">Logout</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+        <header class="topbar">
+            <h3>Students</h3>
+            <h1>Student Management</h1>
+            <span class="date" id="todayDate"></span>
+        </header>
+
+        <div id="overlay" onclick="closeAll()"></div>
+
+        <!-- Action Bar -->
+        <section class="actions">
+            <button onclick="openModal('addStudentModal')">➕ Add Student</button>
+        </section>
+
+        <!-- Student Table -->
+        <section class="table-section">
+  <div class="table-header">
+    <h2>Students</h2>
+
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search student..."
+      onkeyup="searchTable()"
+    />
+  </div>
+
+  <div class="table-wrapper">
+  <table id="studentTable">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th onclick="sortTable(0)">Name ⬍</th>
+        <th onclick="sortTable(1)">Class ⬍</th>
+        <th>Payment</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% students.forEach((student) => { %>
+        <tr>
+          <td><%= student.admissionNumber %></td>
+          <td><%= student.studentFullName %></td>
+          <td><%= student.className || '—' %></td>
+          <td>
+            <%= student.payment ? 'Paid' : 'Unpaid' %>
+          </td>
+          <td class="actions">
+            <a href="/edit/<%= student._id %>">
+                <button class="btn edit">Edit</button>
+            </a>
+
+              <a href="/admin/student/delete/<%= student._id %>">
+                <button class="btn delete" >
+                    Delete</button></a>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+    </div>
+
+  <div id="pagination"></div>
+</section>
+
+
+    </main>
+</div>
+
+<!-- ================= ADD STUDENT MODAL ================= -->
+<div class="modal" id="addStudentModal">
+    <form action="/admin/addStudent" method="post">
+        <h2>Add Student</h2>
+        <input type="hidden" name="schoolID" value="<%= showUser._id %>">
+        <input type="hidden" name="token" value="<%= showUser.token %>">
+        <input type="hidden" name="payment" value="false">
+        <%if(session){ %>
+            <div style="color: rgb(56, 240, 56);">
+                Academic Session <%= session.academicSession %> is active</div>
+        <%}else{%>
+            <div style="color: rgb(233, 58, 52);">No Academic Session Yet</div>
+        <%}%>
+        <input type="text" name="studentFullName" placeholder="Student Full Name" required>
+        <select name="gender" id="">
+            <option value="">--Select Gender--</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+        <select name="studentClass" id="">
+            <option value="">Select Student Class</option>
+            <% listClass.forEach((classItem) => { %>
+                <option value="<%= classItem._id %>"><%= classItem.className %></option>
+            <% }); %>
+        </select>
+        <button>Submit</button>
+        <span class="close" onclick="closeAll()">×</span>
+    </form>
+</div>
+
+
+<!-- ================= EDIT STUDENT MODAL ================= -->
+
+    <%}else{%>
+        unauthorized user.
+    <%}%>
+    <script src="/scriptFolder/menuToggle.js"></script>
+    <script src="/scriptFolder/editAdminStudent.js"></script>
+    <script src="/scriptFolder/openModal.js"></script>
+    <script src="/scriptFolder/searchTable.js"></script>
+    <script src="/scriptFolder/showDate.js"></script>
+</html>

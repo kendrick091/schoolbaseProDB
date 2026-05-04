@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="stylesheet/signup.css">
+</head>
+<body>
+    <div class="container">
+        <div class="sa">
+            <a href="/superAdminLogin">
+                <button class="sa-btn">Super Admin Login</button>
+            </a>
+        </div>
+        <form action="/signup" method="post" enctype="multipart/form-data" class="auth-card">
+            <a href="/" class="sign-link">← Back to Login</a>
+
+            <h2 class="brand">SchoolBase</h2>
+            <p class="subtitle">Create your school account</p>
+
+            <div class="input-group">
+                <input type="text" name="schoolname" placeholder="School Name" required>
+            </div>
+
+            <div class="input-group">
+                <input type="email" name="email" placeholder="Email Address" required>
+            </div>
+
+            <div class="input-group">
+                <input type="text" name="address" placeholder="School Address" required>
+            </div>
+
+            <div class="input-group file-upload">
+                <label for="logo">School Logo</label>
+                <input type="file" id="logo" name="schoolLogo" accept="image/*" required>
+            </div>
+
+            <div class="input-group">
+                <input type="password" name="password" placeholder="Create Password" required>
+            </div>
+
+            <button class="submit-btn">Create Account</button>
+        </form>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/stylesheet/result.css">
+</head>
+<body>
+   <% if (student.payment === true){%>
+
+  <div class="selectorDiv">
+    <div class="nameDiv">
+    <h2>Result for <span style="color: rgb(136, 136, 231);">
+        <%= student.studentFullName %></span>
+      </h2>
+
+        <a href="/studentCumulative"><button>Cumulative</button></a>
+    </div>
+    <br>
+
+<div style="display:flex; gap:10px;">
+  <select id="academicSession" style="padding: 5px;">
+    <option value="">Select Academic Session</option>
+    <% sessions.forEach(s => { %>
+      <option value="<%= s._id %>"><%= s.academicSession %></option>
+    <% }) %>
+  </select>
+
+  <select id="term" style="padding: 5px;">
+    <option value="">Select Term</option>
+    <option value="term1">First Term</option>
+    <option value="term2">Second Term</option>
+    <option value="term3">Third Term</option>
+  </select>
+</div>
+<hr>
+
+</div>
+<% if (school.resultView === 1){%>
+<div id="resultArea"></div>
+<script src="/scriptFolder/adminStudentResult.js"></script>
+<%}else if (school.resultView === 2){%>
+  <div id="resultArea"></div>
+<script src="/scriptFolder/adminStudentResult2.js"></script>
+<%}else{%>
+<div id="resultArea"></div>
+<script src="/scriptFolder/adminStudentResult3.js"></script>
+<%}%>
+
+
+<button onclick="window.print()">
+  Print Result
+</button>
+<%}else{%>
+  <h2 style="color: red;">Fee Not Paid</h2>
+<%}%>
+
+</body>
+</html>

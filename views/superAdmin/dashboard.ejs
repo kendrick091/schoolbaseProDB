@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/superAdminCss/superStyle.css">
+    <link rel="stylesheet" href="/stylesheet/table.css">
+</head>
+<body>
+    <div class="container">
+          <% if (action === 'home'){%>
+        <h1>Schoolbase Super Admin Dashboard</h1>
+        <p>
+            Welcome to the Schoolbase super admin dashboard. Here you can manage 
+            all schools, monitor activities, and control system-wide data.
+        </p>
+
+        <!-- ACTION BUTTONS -->
+        <div class="admin-actions">
+        <hr>
+            <div class="forMoreInfo">
+                <small>Total Schools: <%= totalSchools %></small>
+                <small>Total Students: <%= studentCount %></small>
+            </div>
+        <hr>
+
+    <div class="table-header">
+    <h2>Schools</h2>
+
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search School..."
+      onkeyup="searchTable()"
+    />
+  </div>
+            <table id="studentTable">
+                <thead>
+                <tr>
+                    <th onclick="sortTable(1)">Schools</th>
+                    <th>Email</th>
+                    <th>Active Students</th>
+                    <th>Token</th>
+                    <th>Chizzy </th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+
+               <tbody>
+                    <% if (schools.length === 0) { %>
+                        <tr>
+                            <td colspan="6">No schools found</td>
+                        </tr>
+                    <% } %>
+
+                    <% schools.forEach((school) => { %>
+                        <tr>
+                            <td><%= school.schoolname %></td>
+                            <td><%= school.email %></td>
+                            <td><%= school.totalStudents || 0 %></td>
+                            <td><%= school.token || 'N/A' %></td>
+                            <td><%= school.pTokCard || 'N/A' %></td>
+
+                            <td>
+                            
+                                <a href="/superAdminDashboard/edit/<%= school._id %>" class="btn-edit">
+                                    <button class="btn green-btn">Edit</button>
+                                </a>
+
+                                <!-- <form action="/superAdminSchoolbase/delete/<%= school._id %>" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn-delete">Delete</button>
+                                </form> -->
+                            </td> 
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+            <div id="pagination"></div>
+        </div>
+        <div class="displayDiv"></div>
+    <%}else{%>
+        <section>
+            <div class="top-bar">
+                <div class="img-div">
+                    <img src="<%= schools.schoolLogo %>" 
+                        alt="School Logo" 
+                        class="logo">
+                </div>
+
+                <div class="schoolName-div">
+                    <h2><%= schools ? schools.schoolname : 'N/A' %></h2>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <nav>
+                    <ul>
+                        <li>
+                            <button onclick="showDashboard()">Dashboard</button>
+                        </li>
+
+                        <li>
+                            <button onclick="viewActiveStudent()">
+                                View Active Students (<%= students.length %>)
+                            </button>
+                        </li>
+
+                        <li>
+                            <button onclick="viewInactiveStudent()">
+                                View Inactive Students (<%= inactiveStudents.length %>)
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="displayView" id="displayView">
+                <h3>Welcome Admin</h3>
+                <p>Select what you want to view from the sidebar.</p>
+            </div>
+        </section>
+    <%}%>
+        
+    </div>
+
+    <!-- Pass backend data -->
+<script>
+    const schoolId = "<%= schools._id %>";
+    const schoolPayment = <%= schools.payment %>;
+    const activeStudents = <%- JSON.stringify(students) %>;
+    const inactiveStudents = <%- JSON.stringify(inactiveStudents) %>;
+</script>
+
+    <script src="/superAdminJs/superAdminDashboard.js"></script>
+    <script src="/scriptFolder/searchTable.js"></script>
+</body>
+</html>

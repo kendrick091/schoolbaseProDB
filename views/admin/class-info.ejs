@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/stylesheet/dashboard.css">
+    <link rel="stylesheet" href="/stylesheet/class-info.css">
+    <link rel="stylesheet" href="/stylesheet/menuToggle.css">
+    <link rel="stylesheet" href="/stylesheet/table.css">
+</head>
+<body>
+    <div class="dashboard">
+
+  <!-- Sidebar (UNCHANGED) -->
+  <aside class="sidebar">
+    <h2 class="logo">SchoolBase</h2>
+
+    <nav>
+      <a href="/admin">Dashboard</a>
+      <a href="/admin/student">Students</a>
+      <a href="/teachers">Teachers</a>
+      <a href="/sessions">Academic Sessions</a>
+      <a href="/classes" class="active">Classes</a>
+      <a href="/subjects">Subjects</a>
+      <a href="/fees">Fee Management</a>
+      <a href="/adminResult">Results</a>
+      <a href="/settings">Settings</a>
+    </nav>
+
+    <a href="/logout" class="logout">Logout</a>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="content">
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+    <header class="topbar">
+      <h1>Class Information</h1>
+      <span class="date" id="todayDate"></span>
+    </header>
+
+    <!-- Class Summary -->
+    <section class="info-card">
+      <h2><%= classInfo.className %></h2>
+
+      <div class="info-grid">
+        <div>
+          <strong>Total Students:</strong>
+          <span><%= students.length %></span>
+        </div>
+
+        <div>
+          <strong>Class Teacher:</strong>
+          <span>
+            <%= classTeacher ? classTeacher.teacherName : 'Not Assigned' %>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Students Table -->
+    <section class="table-section">
+      <div class="table-header">
+        <h2>Students in this Class</h2>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Admission.No</th>
+              <th>Student Name</th>
+              <th>Gender</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% if (students.length === 0) { %>
+              <tr>
+                <td colspan="3" style="text-align:center;">
+                  No students assigned to this class
+                </td>
+              </tr>
+            <% } %>
+
+            <% students.forEach((student, index) => { %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= student.admissionNumber %></td>
+                <td><%= student.studentFullName %></td>
+                <td><%= student.gender %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Teachers Table -->
+    <section class="table-section">
+      <div class="table-header">
+        <h2>Teachers</h2>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Teacher Name</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% if (teachers.length === 0) { %>
+              <tr>
+                <td colspan="3" style="text-align:center;">
+                  No teachers assigned to this class
+                </td>
+              </tr>
+            <% } %>
+
+            <% teachers.forEach((teacher, index) => { %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= teacher.teacherName %></td>
+                <td><%= teacher.teacherRole %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+<script src="/scriptFolder/menuToggle.js"></script>
+<script src="/scriptFolder/showDate.js"></script>
+</body>
+</html>

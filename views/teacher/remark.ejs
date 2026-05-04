@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    
+  <link rel="stylesheet" href="/stylesheet/teacher-dashboard.css" />
+  <link rel="stylesheet" href="/stylesheet/table.css" />
+  <link rel="stylesheet" href="/stylesheet/form.css" />
+  <link rel="stylesheet" href="/stylesheet/menuToggle.css" />
+  <link rel="stylesheet" href="/stylesheet/Psychomotor.css" />
+</head>
+<body>
+    <div class="dashboard">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2 class="logo">teacherBase</h2>
+
+    <ul class="nav">
+      <a href="/teacherDashboard"><li>Dashboard</li></a>
+      <a href="/teacherClass/<%= classAssigned._id %>"><li>My Class</li></a>
+      <a href="/teacherPsychomotor">
+        <li>Psychomotor</li>
+      </a>
+      <a href="/teacherRemark">
+        <li class="active">Remark</li>
+      </a>
+      <a href="/teacherResult"><li>Results</li></a>
+      <a href="/teacherLogin/logout"><li>Logout</li></a>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+    <button class="menu-toggle" id="menuToggle">☰</button>
+
+  <h1>Settings</h1>
+
+  <form action="/teacherRemark/update" method="POST" class="settings-form">
+    <!-- GRADE REMARK SETTINGS -->
+<div class="card">
+  <h3>Grade Remarks</h3>
+  <p>Set remarks that appear on student results based on grades.</p>
+
+  <div class="grade-remarks">
+
+    <div class="remark-row">
+      <label>Grade A (75 – 100)</label>
+      <input type="text" name="remarks[A]"
+        value="<%= teacher.gradeRemarks?.A || '' %>"
+        placeholder="e.g. Excellent performance">
+    </div>
+
+    <div class="remark-row">
+      <label>Grade B (65 – 74)</label>
+      <input type="text" name="remarks[B]"
+        value="<%= teacher.gradeRemarks?.B || '' %>"
+        placeholder="e.g. Very good">
+    </div>
+
+    <div class="remark-row">
+      <label>Grade C (50 – 64)</label>
+      <input type="text" name="remarks[C]"
+        value="<%= teacher.gradeRemarks?.C || '' %>"
+        placeholder="e.g. Good effort">
+    </div>
+
+    <div class="remark-row">
+      <label>Grade D (40 – 49)</label>
+      <input type="text" name="remarks[D]"
+        value="<%= teacher.gradeRemarks?.D || '' %>"
+        placeholder="e.g. Needs improvement">
+    </div>
+
+    <div class="remark-row">
+      <label>Grade F (0 – 39)</label>
+      <input type="text" name="remarks[F]"
+        value="<%= teacher.gradeRemarks?.F || '' %>"
+        placeholder="e.g. Fail">
+    </div>
+
+  </div>
+</div>
+
+
+    <button type="submit" class="btn-save">Save Settings</button>
+  </form>
+</main>
+</div>
+<script src="/scriptFolder/teacherInput.js"></script>
+<script src="/scriptFolder/menuToggle.js"></script>
+</body>
+</html>

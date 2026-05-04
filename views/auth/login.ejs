@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="stylesheet/login.css">
+</head>
+<body>
+    <div class="container">
+        <div class="auth-card">
+            <h1 class="brand">SchoolBase</h1>
+
+            <p class="login-text">Login as</p>
+
+            <div class="role-buttons">
+                <button id="admin" class="role-btn active">Admin</button>
+                <button id="teacher" class="role-btn">Teacher</button>
+                <button id="student" class="role-btn">Student</button>
+            </div>
+
+            <!-- Admin -->
+            <form action="/adminLogin" method="post" id="adminLogin" class="login-form">
+                <h3>Admin Login</h3>
+                <input type="email" name="email" placeholder="Email address" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button class="login-btn">Login</button>
+            </form>
+
+            <!-- Teacher -->
+            <form action="/teacherLogin" method="post" id="teacherLoginIn" class="login-form">
+                <h3>Teacher Login</h3>
+                <input type="text" name="teacherPhoneNo" placeholder="Phone number" required>
+                <input type="password" name="teacherToken" placeholder="token" required>
+                <button class="login-btn">Login</button>
+            </form>
+
+            <!-- Student -->
+            <form action="/studentLogin" method="post" id="studentLoginIn" class="login-form">
+                <h3>Student Login</h3>
+                <input type="text" name="admissionNumber" placeholder="Eg. SB/20../.." required>
+                <input type="text" name="studentName" placeholder="Student Full Name" required>
+                <input type="password" name="studentToken" placeholder="Token" required>
+                <button class="login-btn">Login</button>
+            </form>
+
+            <a href="/signup" class="signup-link">Create an account</a>
+        </div>
+    </div>
+
+    <script src="/scriptFolder/loginAs.js"></script>
+</body>
+
+</html>

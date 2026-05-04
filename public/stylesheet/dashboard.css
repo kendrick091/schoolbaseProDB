@@ -1,0 +1,285 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+/* Layout */
+.dashboard {
+    display: flex;
+    min-height: 100vh;
+    background: #f3f4f6;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    background: #1e293b;
+    color: #fff;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+}
+
+.school-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.clickable {
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.clickable:hover {
+    opacity: 0.7;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.4rem;
+}
+
+.sidebar nav a {
+    display: block;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.4rem;
+    color: #cbd5e1;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background 0.3s;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.active {
+    background: #334155;
+    color: #fff;
+}
+
+.logout {
+    margin-top: auto;
+    color: #f87171;
+    text-decoration: none;
+    text-align: center;
+    padding: 0.75rem;
+}
+
+/* Main Content */
+.content {
+    flex: 1;
+    padding: 2rem;
+}
+
+/* Topbar */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.topbar h1 {
+    font-size: 1.6rem;
+}
+
+.date {
+    color: #6b7280;
+}
+
+/* Stats Cards */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.card h3 {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.card p {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #1f2937;
+}
+
+.amountInfo{
+    display: flex;
+    justify-content: space-between;
+}
+
+.countGenderInfo{
+    display: flex;
+    color: #6b7280c5;
+}
+
+.countGenderInfo .genderDiv span{
+    padding: 3px;
+}
+
+
+/* Actions */
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.actions button {
+    padding: 0.8rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    background: #4f46e5;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.actions button:hover {
+    background: #4338ca;
+}
+
+/* Extra Section */
+.extra {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.box {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.box h3 {
+    margin-bottom: 1rem;
+}
+
+.box ul {
+    list-style: none;
+}
+
+.box li {
+    margin-bottom: 0.5rem;
+}
+
+/* ================= MOBILE DESIGN ================= */
+@media (max-width: 768px) {
+
+    /* Layout */
+    .dashboard {
+        flex-direction: column;
+    }
+
+    /* Sidebar becomes top bar */
+    .sidebar {
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        padding: 1rem;
+    }
+
+    .logo {
+        margin: 0;
+        font-size: 1.1rem;
+        flex: 1;
+        text-align: left;
+    }
+
+    .sidebar nav {
+        display: none; /* hide menu initially */
+    }
+
+    .logout {
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    /* Content */
+    .content {
+        padding: 1rem;
+    }
+
+    /* Topbar */
+    .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .topbar h1 {
+        font-size: 1.3rem;
+    }
+
+    /* Stats cards */
+    .stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+    }
+
+    .card {
+        padding: 1rem;
+    }
+
+    .card p {
+        font-size: 1.4rem;
+    }
+
+    /* Action buttons */
+    .actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.7rem;
+    }
+
+    .actions button {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    /* Extra section */
+    .extra {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .box {
+        padding: 1rem;
+    }
+}
+
+/* ================= SMALL PHONES ================= */
+@media (max-width: 480px) {
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .actions {
+        grid-template-columns: 1fr;
+    }
+
+    .topbar h1 {
+        font-size: 1.2rem;
+    }
+}

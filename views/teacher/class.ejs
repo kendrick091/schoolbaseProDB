@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= classInfo.className %> - My Class</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/stylesheet/teacher-dashboard.css">
+  <link rel="stylesheet" href="/stylesheet/teacher-class.css">
+</head>
+<body>
+
+<div class="dashboard">
+    <% if (role === "classTeacher") { %>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2 class="logo">SchoolBase</h2>
+    <ul class="nav">
+      <a href="/teacherDashboard"><li>Dashboard</li></a>
+      <li class="active">My Class</li>
+      <a href="/teacherPsychomotor">
+        <li>Psychomotor</li></a>
+        <a href="/teacherRemark"><li>Remark</li></a>
+        <a href="/teacherResult"><li>Results</li></a>
+      <li><a href="/teacherLogin/logout">Logout</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main -->
+  <main class="content">
+
+    <!-- Header -->
+    <header class="header">
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <div>
+        <h1><%= classInfo.className %></h1>
+        <p class="role">
+          Class Teacher • <strong><%= students.length %></strong> Students
+        </p>
+      </div>
+    </header>
+
+    <!-- Class Card -->
+    <section class="card class-card">
+      <h3>Class Information</h3>
+      <p><strong>Class:</strong> <%= classInfo.className %></p>
+      <p><strong>Total Students:</strong> <%= students.length %></p>
+    </section>
+
+    <!-- Student List -->
+    <section class="card">
+      <div class="table-header">
+        <h3>Students</h3>
+        <!-- <input
+          type="text"
+          id="searchStudent"
+          placeholder="Search student..."
+        > -->
+      </div>
+
+<div class="attendance-wrapper">
+
+  <!-- Hidden Class ID -->
+  <input type="hidden" id="classId" value="<%= classInfo._id %>">
+
+  <!-- Term Selection -->
+  <label for="termSelect">Select Term:</label>
+  <select id="termSelect" style="padding: 5px;">
+    <option value="">-- Select Term --</option>
+    <option value="term1">First Term</option>
+    <option value="term2">Second Term</option>
+    <option value="term3">Third Term</option>
+  </select>
+
+  <!-- Students List -->
+  <ul class="students-list" id="studentsList">
+    <% if (students.length > 0) { %>
+      <% students.forEach((student, index) => { %>
+        <li class="student-item">
+          <form class="student-form" data-student-id="<%= student._id %>">
+            <div class="student-header">
+              <strong><%= index + 1 %>. <%= student.studentFullName %></strong>
+            </div>
+
+            <label>Days Present:</label>
+            <input type="number" class="present" min="0">
+
+            <label>Days Absent:</label>
+            <input type="number" class="absent" min="0">
+
+            <label>Total Days:</label>
+            <input type="number" class="total" readonly>
+
+            <button type="submit" class="save-btn">Save</button>
+            <small class="status"></small>
+          </form>
+        </li>
+      <% }) %>
+    <% } else { %>
+      <li>No students found</li>
+    <% } %>
+  </ul>
+</div>
+
+
+    </section>
+
+  </main>
+    <% } else { %>
+      <h2>You do not have access to this page.</h2>
+    <% } %>
+</div>
+
+<script src="/scriptFolder/searchTable.js"></script>
+<script src="/scriptFolder/attendance.js"></script>
+<script src="/scriptFolder/menuToggle.js"></script>
+</body>
+</html>

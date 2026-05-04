@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cumulative Result</title>
+    <link rel="stylesheet" href="/stylesheet/result.css">
+</head>
+<body>
+    <div class="selectorDiv">
+    <select id="academicSession">
+  <option value="">Select Academic Session</option>
+  <% sessions.forEach(s => { %>
+    <option value="<%= s._id %>"><%= s.academicSession %></option>
+  <% }) %>
+</select>
+<a href="/studentDashBoard"><button>back</button></a>
+</div>
+
+<hr>
+
+<div id="resultArea"></div>
+
+<button onclick="window.print()">
+  Print Result
+</button>
+
+<script src="/scriptFolder/cumulative.js"></script>
+</body>
+</html>

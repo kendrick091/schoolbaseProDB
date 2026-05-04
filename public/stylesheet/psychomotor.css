@@ -1,0 +1,40 @@
+.psychomotorForm {
+      max-width: 900px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .psy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+    }
+
+    .psyCon label {
+      font-weight: 600;
+    }
+
+    .psyCon input {
+      width: 100%;
+      padding: 6px;
+    }
+
+    .section-title {
+      margin: 25px 0 10px;
+      color: #007780;
+      border-bottom: 2px solid #007780;
+      padding-bottom: 5px;
+    }
+
+    .shiny-btn {
+      background: #007780;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+    }

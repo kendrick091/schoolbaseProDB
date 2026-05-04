@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheet/fees.css">
+    <link rel="stylesheet" href="/stylesheet/teacher-dashboard.css">
+    <link rel="stylesheet" href="/stylesheet/menuToggle.css">
+    <link rel="stylesheet" href="/stylesheet/table.css">
+    <link rel="stylesheet" href="/stylesheet/form.css">
+</head>
+<body>
+       <div class="dashboard">
+
+   <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2 class="logo">SchoolBase</h2>
+
+    <ul class="nav">
+      <a href="/teacherDashboard"><li>Dashboard</li></a>
+      <a href="/teacherClass/<%= classInfo._id %>"><li>My Class</li></a>
+      <a href="/teacherPsychomotor">
+        <li>Psychomotor</li>
+      </a>
+      <a href="/teacherRemark"><li>Remark</li></a>
+      <a href="/teacherResult"><li class="active">Results</li></a>
+      <a href="/teacherLogin/logout"><li>Logout</li></a>
+    </ul>
+  </aside>
+
+  <!-- Main -->
+  <main class="content">
+    <button class="menu-btn" id="menuToggle">☰</button>
+
+    <header class="topbar">
+      <h1><%= classInfo.className %></h1>
+      <span class="date" id="todayDate"></span>
+    </header>
+
+     <div class="filter-bar" style="display:flex; gap:15px; margin-bottom:15px;">
+
+  <!-- Academic Session -->
+  <select id="academicSession" required style="padding: 10px;">
+  <option value="">Select Academic Session</option>
+
+  <% if (sessions && sessions.length > 0) { %>
+    <% sessions.forEach(session => { %>
+      <option value="<%= session._id %>">
+        <%= session.academicSession %>
+      </option>
+    <% }) %>
+  <% } else { %>
+    <option disabled>No sessions available</option>
+  <% } %>
+</select>
+
+  <!-- Term -->
+  <select id="term" required style="padding: 10px;">
+    <option value="">Select Term</option>
+    <option value="term1">First Term</option>
+    <option value="term2">Second Term</option>
+    <option value="term3">Third Term</option>
+  </select>
+
+</div>
+
+
+    <section class="table-section">
+  <div class="table-header">
+    <h2>Students</h2>
+
+   
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search student..."
+      onkeyup="searchTable()"
+    />
+  </div>
+
+  <div class="table-wrapper">
+  <table id="studentTable">
+    <thead>
+  <tr>
+    <th>Name</th>
+    <th>AdmissionNo.</th>
+    <th>Payment</th>
+    <th>Action</th>
+  </tr>
+</thead>
+
+<tbody>
+  <% students.forEach(student => { %>
+    <tr>
+
+      <td><%= student.studentFullName %></td>
+
+      <td><%= student.admissionNumber || '—' %></td>
+
+      <td>
+        <% if (student.payment === true){%>
+            <span style="color: green;">Paid</span>
+        <%}else{%>
+            <span style="color: red;">Unpaid</span>
+        <%}%>
+      </td>
+
+      <td>
+        <button onclick="viewResultT(
+    '<%= student._id %>',
+    '<%= student.studentClass %>')"
+        style="background:#007780; color:white; padding:6px 10px;">
+        View Result
+        </button>
+
+        <div style="width: 100%;">
+        <!--- code to promote student -->
+        <label for="newClassId">Promote to Class:</label>
+        <select style="width: 100%; padding: 3px;" 
+        onchange="promoteStudent('<%= student._id %>', this)">
+          <% classList.forEach(cls => { %>
+            <option 
+              value="<%= cls._id %>"
+              <%= cls._id.toString() === student.studentClass.toString() ? 'selected' : '' %>
+            >
+              <%= cls.className %>
+            </option>
+          <% }) %>
+        </select>
+        </div>
+
+      </td>
+    </tr>
+  <% }) %>
+</tbody>
+
+  </table>
+
+    </div>
+
+    <!--- Code to promote bulk student --->
+  <div id="pagination"></div>
+    <div class="promotion-div" style="padding: 7px;
+    background: #007780; color: white;
+    display: inline-block;">
+
+    <h4>Promote All Students in this class</h4>
+    <select id="bulkClassSelect" style="padding: 8px;">
+      <% classList.forEach(cls => { %>
+        <option value="<%= cls._id %>"><%= cls.className %></option>
+      <% }) %>
+    </select>
+
+    <button style="padding: 10px" 
+    onclick="promoteAllStudents()">Promote All</button>
+  </div>
+
+  </section>
+  </main>
+</div>
+<script src="/scriptFolder/searchTable.js"></script>
+<script src="/scriptFolder/menuToggle.js"></script>
+<script src="/scriptFolder/teacherViewResult.js"></script>
+<script>
+function promoteStudent(studentId, selectElement) {
+  const newClassId = selectElement.value;
+
+  if (!confirm("Are you sure you want to promote this student?")) {
+    location.reload(); // reset dropdown
+    return;
+  }
+
+  fetch(`/teacherResult/promote-student/${studentId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ newClassId })
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.message);
+    location.reload();
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Error promoting student");
+  });
+}
+</script>
+
+<script>
+function promoteAllStudents() {
+  const newClassId = document.getElementById("bulkClassSelect").value;
+
+  if (!confirm("Are you sure you want to promote ALL students in this class?")) {
+    return;
+  }
+
+  fetch(`/teacherResult/promote-all`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ newClassId })
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.message);
+    location.reload();
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Error promoting students");
+  });
+}
+</script>
+</body>
+</html>

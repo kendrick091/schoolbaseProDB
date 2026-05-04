@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheet/dashboard.css">
+    <link rel="stylesheet" href="/stylesheet/menuToggle.css">
+    <link rel="stylesheet" href="/stylesheet/overlay.css">
+    <link rel="stylesheet" href="/stylesheet/table.css">
+</head>
+<body>
+    <% if (showUser){%>
+        <div class="dashboard">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">SchoolBase</h2>
+
+        <nav>
+            <a href="/admin">Dashboard</a>
+            <a href="/admin/student">Students</a>
+            <a href="/teachers" class="active">Teachers</a>
+            <a href="/sessions">Academic Sessions</a>
+            <a href="/classes">Classes</a>
+            <a href="/subjects">Subjects</a>
+            <a href="/fees">Fee Management</a>
+            <a href="/adminResult">Results</a>
+            <a href="/settings">Settings</a>
+        </nav>
+
+        <a href="/logout" class="logout">Logout</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+        <header class="topbar">
+            <h3>Teacher</h3>
+            <h1>Teacher Management</h1>
+            <span class="date" id="todayDate"></span>
+        </header>
+
+        <div id="overlay" onclick="closeAll()"></div>
+
+        <!-- Action Bar -->
+        <section class="actions">
+            <button onclick="openModal('formTeacherModal')">➕ Add Class Teacher</button>
+        </section>
+
+        <!-- Student Table -->
+        <section class="table-section">
+  <div class="table-header">
+    <h2>teacher</h2>
+
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search student..."
+      onkeyup="searchTable()"
+    />
+  </div>
+
+  <div class="table-wrapper">
+  <table id="studentTable">
+    <thead>
+      <tr>
+        <th onclick="sortTable(0)">Name ⬍</th>
+        <th>Role</th>
+        <th onclick="sortTable(1)">Class ⬍</th>
+        <th>Subject</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+  <% listTeacher.forEach((teacher) => { %>
+    <tr>
+      <td><%= teacher.teacherName %></td>
+      <td><%= teacher.teacherRole %></td>
+
+      <td>
+        <%= teacher.teacherRole === 'classTeacher'
+          ? teacher.className || '—'
+          : '—' %>
+      </td>
+
+      <td>
+        <%= teacher.teacherRole === 'subjectTeacher'
+          ? teacher.subjectName || '—'
+          : '—' %>
+      </td>
+
+      <td class="actions">
+        <a href="/edit/teacher/<%= teacher._id %>">
+          <button class="btn edit">Edit</button>
+        </a>
+
+        <a href="/teachers/delete/<%= teacher._id %>">
+          <button class="btn delete">Delete</button>
+        </a>
+      </td>
+    </tr>
+  <% }) %>
+</tbody>
+
+  </table>
+    </div>
+
+  <div id="pagination"></div>
+</section>
+
+
+    </main>
+</div>
+
+<!-- ================= ADD TEACHER MODAL ================= -->
+<div class="modal" id="formTeacherModal">
+    <section>
+    <form action="/admin/addTeacher" method="post">
+        <h2>Add Teacher</h2>
+        <input type="hidden" name="schoolID" value="<%= showUser._id %>">
+        <input type="hidden" name="token" value="<%= showUser.token %>">
+        <input type="text" name="teacherName" placeholder="Teacher's Name" required>
+        <input type="text" name="phoneNo" placeholder="Phone Number" required>
+        <select name="gender" id="">
+            <option value="">--Select Gender--</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+       <select name="teacherRole" id="teacherRole">
+  <option value="">Select Teacher Role</option>
+  <option value="classTeacher">Class Teacher</option>
+  <option value="subjectTeacher">Subject Teacher</option>
+</select>
+
+<select name="classAssigned" id="assignClass">
+  <option value="">Assign Class to Teacher</option>
+  <% classList.forEach((classItem) => { %>
+    <option value="<%= classItem._id %>"><%= classItem.className %></option>
+  <% }); %>
+</select>
+
+<select name="subjectAssigned" id="assignSubject">
+  <option value="">Assign Subject to Teacher</option>
+  <% subjectList.forEach((subjectItem) => { %>
+    <option value="<%= subjectItem._id %>"><%= subjectItem.subjectName %></option>
+  <% }); %>
+</select>
+        <button>Submit</button>
+        <span class="close" onclick="closeAll()">×</span>
+    </form>
+    </section>
+    </div>
+
+
+<!-- ================= EDIT STUDENT MODAL ================= -->
+
+    <%}else{%>
+        unauthorized user.
+    <%}%>
+    <script src="/scriptFolder/menuToggle.js"></script>
+    <script src="/scriptFolder/editAdminStudent.js"></script>
+    <script src="/scriptFolder/openModal.js"></script>
+    <script src="/scriptFolder/searchTable.js"></script>
+    <script src="/scriptFolder/showDate.js"></script>
+</html>
