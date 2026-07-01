@@ -22,7 +22,7 @@ router.get('/', auth, async (req, res) => {
         .find({ schoolID: schoolId, isActive: true })
         .toArray();
     
-      const FEE_PER_STUDENT = 300;
+      const FEE_PER_STUDENT = 350;
       const totalStudents = students.length;
       const totalSchoolFee = totalStudents * FEE_PER_STUDENT;
 
@@ -49,8 +49,8 @@ router.get('/', auth, async (req, res) => {
       schoolEmail: school.email,   // <-- pass this
       paymentStatus: school.payment,
       totalStudents,
-      feePerStudent: 300,
-      totalSchoolFee: totalStudents * 300,
+      feePerStudent: FEE_PER_STUDENT,
+      totalSchoolFee: totalStudents * FEE_PER_STUDENT,
       paystackKey: pubKey
     });
 
