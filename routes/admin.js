@@ -282,6 +282,7 @@ router.post('/addStudent', auth, async (req, res) => {
     const student = {
       admissionNumber,
       studentFullName: req.body.studentFullName.trim(),
+      parentNo: req.body.parentNo,
       gender: req.body.gender,
       studentClass: new ObjectId(req.body.studentClass),
       schoolID: schoolId,

@@ -77,6 +77,34 @@
       </label>
     </div>
 
+    <!--- CUMULATIVE VIEW  --->
+    <div class="card">
+      <h3>Cumulative Result Type</h3>
+      <p>Choose how cumulative results are displayed.</p>
+
+      <label>
+        <input type="radio" name="cumulativeView" value="1"
+          <%= school.cumulativeView === 1 ? 'checked' : '' %>>
+        Type 1 Cumulative Style.
+      </label>
+
+      <label>
+        <input type="radio" name="cumulativeView" value="2"
+          <%= school.cumulativeView === 2 ? 'checked' : '' %>>
+        Type 2 Cumulative Style with 2 CA and Psychomotor.
+      </label>
+      <label>
+        <input type="radio" name="cumulativeView" value="3"
+          <%= school.cumulativeView === 3 ? 'checked' : '' %>>
+        Type 3 Cumulative Style with 3 CA and Psychomotor.
+      </label>
+      <label>
+        <input type="radio" name="cumulativeView" value="4"
+          <%= school.cumulativeView === 4 ? 'checked' : '' %>>
+        Type 4 Cumulative Style with 4 CA and Psychomotor.
+      </label>
+    </div>
+
     <!-- POSITION SETTING -->
     <div class="card">
       <h3>Student Position (Class Rank)</h3>

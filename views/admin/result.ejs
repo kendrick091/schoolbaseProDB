@@ -116,34 +116,6 @@
       <span class="date" id="todayDate"></span>
     </header>
 
-     <!-- <div class="filter-bar" style="display:flex; gap:15px; margin-bottom:15px;">
-
-  
-  <select id="academicSession" required style="padding: 10px;">
-  <option value="">Select Academic Session</option>
-
-  <% if (sessions && sessions.length > 0) { %>
-    <% sessions.forEach(session => { %>
-      <option value="<%= session._id %>">
-        <%= session.academicSession %>
-      </option>
-    <% }) %>
-  <% } else { %>
-    <option disabled>No sessions available</option>
-  <% } %>
-</select>
-
-  
-  <select id="term" required style="padding: 10px;">
-    <option value="">Select Term</option>
-    <option value="term1">First Term</option>
-    <option value="term2">Second Term</option>
-    <option value="term3">Third Term</option>
-  </select>
-
-</div> -->
-
-
     <section class="table-section">
   <div class="table-header">
     <h2>Students</h2>
@@ -165,7 +137,7 @@
       <input type="checkbox" onclick="toggleAll(this)" />
     </th>
     <th>Name</th>
-    <th>Session</th>
+    <th>Contact No.</th>
     <th>Fee</th>
     <th>Action</th>
   </tr>
@@ -183,7 +155,7 @@
 
       <td><%= student.studentFullName %></td>
 
-      <td><%= student.sessionName || '—' %></td>
+      <td><%= student.parentNo || '—' %></td>
 
       <td>
         <% if (student.payment === true){%>
@@ -199,6 +171,12 @@
         color:white; padding:6px 10px;">
           View Result
         </button></a>
+        <a href="/adminResult/whatsapp/<%= student._id %>">
+          <button style="background:#00e740; 
+        color:white; padding:6px 10px;">
+            whatsApp
+          </button>
+        </a>
       </td>
     </tr>
   <% }) %>

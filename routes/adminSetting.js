@@ -32,6 +32,7 @@ router.post('/update', auth, async (req, res) => {
         address: updatedAddress,
         email: updatedEmail,
         resultView: Number(resultView),
+        cumulativeView: Number(req.body.cumulativeView), //Select cumulative view value
         positionView: req.body.positionView === 'on',
         gradeRemarks: {
           A: remarks?.A || '',

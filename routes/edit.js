@@ -37,6 +37,7 @@ router.post('/:id', auth, async(req, res)=>{
     {_id: new ObjectId(req.params.id), schoolID: schoolId},
   {$set: {
     studentFullName: req.body.studentFullName,
+    parentNo: req.body.parentNo,
     gender: req.body.gender,
     studentClass: new ObjectId(req.body.studentClass)
   }

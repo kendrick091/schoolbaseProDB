@@ -48,4 +48,43 @@ router.get('/:id', auth, async (req, res) => {
   });
 });
 
+router.get('/delete/:id', auth, async (req, res) => {
+  try {
+    const schoolId = new ObjectId(req.user.id);
+    const studentId = new ObjectId(req.params.id);
+
+    const student = await students.findOne({
+      _id: new ObjectId(studentId),
+      schoolID: schoolId
+    });
+
+    const selectedClass = await classes.findOne({
+       _id: student.studentClass,
+      schoolID: schoolId
+    });
+
+    await students.updateOne(
+      {
+        _id: studentId,
+        schoolID: schoolId
+      },
+      {
+        $set: {
+          isActive: false,
+          deactivatedAt: new Date() // optional but recommended
+        }
+      }
+    );
+
+    // console.log(`Student deactivated successfully for class: 
+    //   ${selectedClass.className}
+    //   id: ${selectedClass._id}`);
+
+    res.redirect(`/classinfo/${student.studentClass}`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Unable to deactivate student');
+  }
+});
+
 module.exports = router;

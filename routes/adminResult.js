@@ -126,5 +126,66 @@ router.post('/update-payment', auth, async (req, res) => {
   res.json({ success: true });
 });
 
+router.get("/whatsapp/:studentId/", auth, async (req, res) => {
+    try {
+
+        const studentId = new ObjectId(req.params.studentId);
+
+        // Find student
+        const student = await students.findOne({
+            _id: studentId
+        });
+
+        if (!student) {
+            return res.status(404).send("Student not found");
+        }
+
+        // Find school
+        const school = await userBoard.findOne({
+            _id: student.schoolID
+        });
+
+        if (!school) {
+            return res.status(404).send("School not found");
+        }
+
+        if (!student.parentNo) {
+            return res.send("Parent phone number not available.");
+        }
+
+        // Remove leading zero and add Nigeria country code
+        let phone = student.parentNo.replace(/\D/g, "");
+
+        if (phone.startsWith("0")) {
+            phone = "234" + phone.substring(1);
+        }
+
+        const message = `Dear Parent,
+
+Here are your child's login details.
+
+Student Full Name: ${student.studentFullName}
+
+Admission Number: ${student.admissionNumber}
+
+Token: ${school.token}
+
+Use these details to log in to the SchoolBase Parent Portal.
+
+Thank you.
+
+${school.schoolname}`;
+
+        const whatsappURL =
+            `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+        res.redirect(whatsappURL);
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server Error");
+    }
+});
+
 
 module.exports = router;

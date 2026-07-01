@@ -73,6 +73,7 @@
               <th>Admission.No</th>
               <th>Student Name</th>
               <th>Gender</th>
+              <th>Action</th>
             </tr>
           </thead>
 
@@ -91,6 +92,11 @@
                 <td><%= student.admissionNumber %></td>
                 <td><%= student.studentFullName %></td>
                 <td><%= student.gender %></td>
+                <td>
+                  <a href="/classinfo/delete/<%= student._id %>">
+                <button class="btn delete" style="padding: 8px;">
+                    Delete</button></a>
+                </td>
               </tr>
             <% }) %>
           </tbody>

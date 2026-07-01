@@ -39,6 +39,8 @@ async function startServer() {
     app.use('/settings', require('./routes/adminSetting'));
     app.use('/fees', require('./routes/fees'));
     app.use('/adminStudentResult', require('./routes/adminStudentResult'));
+    app.use('/adminStudentCumulative', require('./routes/adminStudentCumulative'));
+    app.use('/adminStudentCumulative2', require('./routes/adminStudentCumulative2'));
 
     app.use('/teacherLogin', require('./routes/teacherLogin'));
     app.use('/teacherDashBoard', require('./routes/teacherDashBoard'));

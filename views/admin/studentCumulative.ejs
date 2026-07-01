@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cumulative Result</title>
+    <link rel="stylesheet" href="/stylesheet/result.css">
+</head>
+<body>
+
+    <div class="selectorDiv">
+        <h2>
+        <%= student.studentFullName %> Cumulative Result
+        </h2>
+    <select id="academicSession">
+  <option value="">Select Academic Session</option>
+  <% sessions.forEach(s => { %>
+    <option value="<%= s._id %>"><%= s.academicSession %></option>
+  <% }) %>
+</select>
+<a href="/adminStudentResult/<%= student._id %>"><button>back</button></a>
+</div>
+
+<hr>
+<% if (admin.cumulativeView === 1) { %>
+
+<div id="resultArea"
+     data-student-id="<%= student._id %>">
+</div>
+<script src="/scriptFolder/adminStudentCumulative.js"></script>
+<% } else if(admin.cumulativeView === 2) { %>
+    <div id="resultArea"
+         data-student-id="<%= student._id %>">
+    </div>
+    <script src="/scriptFolder/adminStudentCumulative2.js"></script>
+
+    <%}else{%>
+    <h3>Invalid Cumulative View</h3>
+    <%}%>
+
+<button onclick="window.print()">
+  Print Result
+</button>
+
+
+
+ <script>
+    const studentId = "<%= student._id %>";
+</script>
+
+</body>
+</html>

@@ -109,3 +109,18 @@ body {
 .sign-link:hover {
     color: #38bdf8;
 }
+
+.sa{
+    padding: 10px;
+    text-align: center;
+}
+
+.sa button{
+    padding: 3px;
+    color: transparent;
+    background: none;
+    border: none;
+    border-left: 1px solid #1e293b;
+    border-right: 1px solid #1e293b;
+    font-size: 9px;
+}
