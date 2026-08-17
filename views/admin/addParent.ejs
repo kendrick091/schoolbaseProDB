@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheet/dashboard.css">
+    <link rel="stylesheet" href="/stylesheet/form.css">
+    <link rel="stylesheet" href="/stylesheet/table.css">
+    <link rel="stylesheet" href="/parentStylesheet/parent.css">
+</head>
+<body>
+    <div class="container">
+        <a href="/admin"><button class="btn">Back to Dashboard</button></a>
+        <div class="form-div">
+            
+            <form action="/addParent" method="POST">
+            <div class="input-card">
+            <label>Parent Name</label><br>
+
+            <input
+            type="text"
+            name="parentFullName"
+            placeholder="e.g. John Doe"
+            required>
+            </div>
+
+            <div class="input-card">
+            <label>Phone Number</label><br>
+
+            <input
+            type="text"
+            id="parentPhone"
+            name="phone"
+            placeholder="e.g. 080xxxxxxxx"
+            required>
+
+            </div>
+            
+            <div class="input-card">
+            <label>Email</label><br>
+
+            <input
+            type="email"
+            id="parentEmail"
+            name="email"
+            placeholder="e.g. john.doe@example.com"
+            required>
+
+            </div>
+            placeholder="e.g. 080xxxxxxxx"
+            required>
+
+            </div>
+
+            <h3>Select Child(ren)</h3>
+            <div id="student-list"></div>
+
+            <button type="submit">Add Parent</button>
+
+            </form>
+        </div>
+        <div class="scroll list-parent">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Parent Name</th>
+                        <th>Phone Number</th>
+                        <th>Email</th>
+                        <th>Child(ren)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% parent.forEach(p => { %>
+                        <tr>
+                            <td><%= p.parentFullName %></td>
+                            <td><%= p.phone %></td>
+                            <td><%= p.email %></td>
+                            <td>
+                                <% p.children.forEach(child => { %>
+                                    <span><%= child.studentFullName %>,</span><br>
+                                <% }) %>
+                            </td>
+                            <td>
+                                <a href="/addParent/edit/<%= p._id %>">
+                                    <button class="btn">Edit</button>
+                                </a>
+                                <a href="/addParent/delete/<%= p._id %>">
+                                    <button class="btn"
+                                    style="background: rgb(190, 96, 96);">Delete</button>
+                                </a>
+                            </td>
+                        </tr>
+                        <% }) %>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script src="/parent/addParent.js"></script>
+</body>
+</html>

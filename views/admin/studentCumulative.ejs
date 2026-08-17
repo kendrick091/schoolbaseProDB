@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/stylesheet/result.css">
 </head>
 <body>
-
+  <% if (student){%>
     <div class="selectorDiv">
         <h2>
         <%= student.studentFullName %> Cumulative Result
@@ -36,6 +36,9 @@
 
     <%}else{%>
     <h3>Invalid Cumulative View</h3>
+    <%}%>
+    <%}else{%>
+    <h3>Student not found</h3>
     <%}%>
 
 <button onclick="window.print()">

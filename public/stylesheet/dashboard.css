@@ -131,7 +131,24 @@
 .countGenderInfo .genderDiv span{
     padding: 3px;
 }
+.scroll{
+    max-height: 500px;      /* Adjust to your preferred height */
+    overflow-y: auto;       /* Vertical scrolling */
+    overflow-x: hidden;     /* Prevent horizontal scrolling */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
 
+.btn{
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    background: #4f46e5;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
 
 /* Actions */
 .actions {

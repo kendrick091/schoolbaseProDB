@@ -68,6 +68,7 @@ const students = await db.collection('students')
 // Count total schools
 const totalSchools = schools.length;
 const studentCount = students.length;
+const academicSessions = await db.collection('academicSessions').find().toArray();
 
     res.render('superAdmin/dashboard', {
         title: 'Super Admin Dashboard',
@@ -76,7 +77,8 @@ const studentCount = students.length;
         totalSchools,
         studentCount,
         students: null,
-        inactiveStudents: null
+        inactiveStudents: null,
+        academicSessions
     });
 })
 
@@ -288,5 +290,6 @@ router.post(
         }
     }
 );
+
 
 module.exports = router;

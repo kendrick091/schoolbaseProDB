@@ -57,7 +57,9 @@ router.get(
 
         const subjectList = await subjectsCollection.find({
             schoolID: new ObjectId(schoolData._id)
-        }).toArray();
+        })
+        .sort({ subjectName: 1 })
+        .toArray();
 
         res.render('teacher/dashboard', {
             title: 'Teacher Dashboard',

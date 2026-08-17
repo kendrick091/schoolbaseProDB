@@ -11,6 +11,41 @@ const teachers = db.collection('teachers')
 const subjects = db.collection('subjects')
 const sessions = db.collection('academicSessions')
 
+const path = require("path");
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        let uploadPath = "uploads/";
+
+        if (file.fieldname === "schoolLogo") {
+            uploadPath += "logos";
+        } else if (file.fieldname === "studentPassport") {
+            uploadPath += "passport";
+        } else {
+            uploadPath += "others";
+        }
+
+        cb(null, uploadPath);
+    },
+
+    filename: (req, file, cb) => {
+        const uniqueName = Date.now() + path.extname(file.originalname);
+        cb(null, uniqueName);
+    }
+});
+
+const upload = multer({
+    storage,
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith("image/")) {
+            cb(null, true);
+        } else {
+            cb(new Error("Only images allowed"));
+        }
+    }
+});
+
 //Edit student code
 router.get('/:id', auth, async (req, res) => {
   const schoolId = new ObjectId(req.user.id)
@@ -39,12 +74,40 @@ router.post('/:id', auth, async(req, res)=>{
     studentFullName: req.body.studentFullName,
     parentNo: req.body.parentNo,
     gender: req.body.gender,
-    studentClass: new ObjectId(req.body.studentClass)
+    studentClass: new ObjectId(req.body.studentClass),
+
+    age: req.body.studentAge,
+    stateOfOrigin:  req.body.stateOfOrigin,
+    LGA: req.body.localGovernmentOfOrigin,
+    physicallyChallenged: req.body.physicallyChallenged
   }
 }
 )
 res.redirect('/admin/student')
 })
+
+// Edit passport upload code
+router.post('/:id/passport', auth, upload.single('studentPassport'), async (req, res) => {
+  const schoolId = new ObjectId(req.user.id);
+  const studentId = new ObjectId(req.params.id);
+
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+
+  const passportPath = `/uploads/passport/${req.file.filename}`;
+
+  await students.updateOne(
+    { _id: studentId, schoolID: schoolId },
+    {
+      $set: {
+        studentPassport: passportPath
+      }
+    }
+  );
+
+  res.redirect(`/edit/${studentId}`);
+});
 
 //Edit teacher code
 router.get('/teacher/:id', auth, async (req, res) => {
@@ -111,6 +174,7 @@ router.post('/teacher/:id', auth, async (req, res) => {
   res.redirect('/teachers');
 });
 
+// Edit class code
 router.get('/class/:id', auth, async (req, res) => {
   const schoolId = new ObjectId(req.user.id)
   const classInfo = await classes.findOne({

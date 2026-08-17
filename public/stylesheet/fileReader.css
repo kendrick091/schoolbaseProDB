@@ -1,0 +1,9 @@
+.file-upload img {
+    width: 120px;
+    height: 140px;
+    object-fit: cover;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    display: block;
+    margin: 10px auto;
+}

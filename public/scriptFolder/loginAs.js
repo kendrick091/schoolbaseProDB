@@ -1,17 +1,20 @@
 const adminBtn = document.getElementById('admin');
 const teacherBtn = document.getElementById('teacher');
 const studentBtn = document.getElementById('student');
+// const parentBtn = document.getElementById('parent');
 
 const adminForm = document.getElementById('adminLogin');
 const teacherForm = document.getElementById('teacherLoginIn');
+// const parentForm = document.getElementById('parentLoginIn');
 const studentForm = document.getElementById('studentLoginIn');
 
-const buttons = [adminBtn, teacherBtn, studentBtn];
+const buttons = [adminBtn, teacherBtn, studentBtn]; // , parentBtn];
 
 function hideAllForms() {
     adminForm.style.display = 'none';
     teacherForm.style.display = 'none';
     studentForm.style.display = 'none';
+    // parentForm.style.display = 'none';
 }
 
 function setActive(btn) {
@@ -30,6 +33,12 @@ teacherBtn.onclick = () => {
     teacherForm.style.display = 'block';
     setActive(teacherBtn);
 };
+
+// parentBtn.onclick = () => {
+//     hideAllForms();
+//     parentForm.style.display = 'block';
+//     setActive(parentBtn);
+// }
 
 studentBtn.onclick = () => {
     hideAllForms();

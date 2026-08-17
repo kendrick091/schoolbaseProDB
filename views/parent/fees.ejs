@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <link rel="stylesheet" href="/stylesheet/dashboard.css">
+    <link rel="stylesheet" href="/parentStylesheet/dashboard.css">
+</head>
+<body>
+   <div class="fees-container">
+
+    <h2>School Fees</h2>
+
+    <h3>
+        <%= student.studentFullName %>
+    </h3>
+
+    <p>
+        Admission No:
+        <strong>
+            <%= student.admissionNumber %>
+        </strong>
+    </p>
+
+    <p>
+        Class:
+        <strong>
+            <%= studentClass.className %>
+        </strong>
+    </p>
+
+    <p>
+        Academic Session:
+        <strong>
+            <%= session.academicSession %>
+        </strong>
+    </p>
+
+
+    <hr>
+
+
+    <!-- ==========================
+         TERM 1
+    =========================== -->
+
+    <div class="term-card">
+
+        <h3>Term 1</h3>
+
+        <p>
+            School Fees:
+            <strong>
+                ₦<%= fees.term1.toLocaleString() %>
+            </strong>
+        </p>
+
+
+        <% const term1Paid =
+            payments.some(
+                payment =>
+                    payment.term === 'term1'
+            );
+        %>
+
+
+        <% if (term1Paid) { %>
+
+            <button
+                class="btn paid-btn"
+                disabled
+            >
+                Already Paid
+            </button>
+
+        <% } else { %>
+
+            <form
+                action="/parentDashBoard/pay-fees/<%= student._id %>"
+                method="POST"
+            >
+
+                <input
+                    type="hidden"
+                    name="term"
+                    value="term1"
+                >
+
+                <button
+                    type="submit"
+                    class="btn pay-btn"
+                >
+                    Pay ₦<%= fees.term1.toLocaleString() %>
+                </button>
+
+            </form>
+
+        <% } %>
+
+    </div>
+
+
+
+    <!-- ==========================
+         TERM 2
+    =========================== -->
+
+    <div class="term-card">
+
+        <h3>Term 2</h3>
+
+        <p>
+            School Fees:
+            <strong>
+                ₦<%= fees.term2.toLocaleString() %>
+            </strong>
+        </p>
+
+
+        <% const term2Paid =
+            payments.some(
+                payment =>
+                    payment.term === 'term2'
+            );
+        %>
+
+
+        <% if (term2Paid) { %>
+
+            <button
+                class="btn paid-btn"
+                disabled
+            >
+                Already Paid
+            </button>
+
+        <% } else { %>
+
+            <form
+                action="/parentDashBoard/pay-fees/<%= student._id %>"
+                method="POST"
+            >
+
+                <input
+                    type="hidden"
+                    name="term"
+                    value="term2"
+                >
+
+                <button
+                    type="submit"
+                    class="btn pay-btn"
+                >
+                    Pay ₦<%= fees.term2.toLocaleString() %>
+                </button>
+
+            </form>
+
+        <% } %>
+
+    </div>
+
+
+
+    <!-- ==========================
+         TERM 3
+    =========================== -->
+
+    <div class="term-card">
+
+        <h3>Term 3</h3>
+
+        <p>
+            School Fees:
+            <strong>
+                ₦<%= fees.term3.toLocaleString() %>
+            </strong>
+        </p>
+
+
+        <% const term3Paid =
+            payments.some(
+                payment =>
+                    payment.term === 'term3'
+            );
+        %>
+
+
+        <% if (term3Paid) { %>
+
+            <button
+                class="btn paid-btn"
+                disabled
+            >
+                Already Paid
+            </button>
+
+        <% } else { %>
+
+            <form
+                action="/parentDashBoard/pay-fees/<%= student._id %>"
+                method="POST"
+            >
+
+                <input
+                    type="hidden"
+                    name="term"
+                    value="term3"
+                >
+
+                <button
+                    type="submit"
+                    class="btn pay-btn"
+                >
+                    Pay ₦<%= fees.term3.toLocaleString() %>
+                </button>
+
+            </form>
+
+        <% } %>
+
+    </div>
+
+</div>
+</body>
+</html>

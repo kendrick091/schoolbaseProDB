@@ -22,7 +22,14 @@ router.get('/', auth, async (req, res) => {
 
 router.post('/update', auth, async (req, res) => {
   const schoolId = new ObjectId(req.user.id);
-  const {updatedName, updatedAddress, updatedEmail, resultView, remarks } = req.body;
+  const {
+    updatedName, updatedAddress, updatedEmail,
+    updatedBankAccount, updatedBankName,
+    updatedPrimaryFee1, updatedPrimaryFee2, updatedPrimaryFee3,
+    updatedJuniorSecondaryFee1, updatedJuniorSecondaryFee2, updatedJuniorSecondaryFee3,
+    updatedSeniorSecondaryFee1, updatedSeniorSecondaryFee2, updatedSeniorSecondaryFee3,
+    resultView, remarks 
+  } = req.body;
 
   await db.collection('users').updateOne(
     { _id: schoolId },
@@ -31,6 +38,18 @@ router.post('/update', auth, async (req, res) => {
         schoolname: updatedName,
         address: updatedAddress,
         email: updatedEmail,
+        bankAccount: updatedBankAccount || '',
+        bankName: updatedBankName || '',
+        primaryFeeTerm1: parseFloat(updatedPrimaryFee1) || 0,
+        primaryFeeTerm2: parseFloat(updatedPrimaryFee2) || 0,
+        primaryFeeTerm3: parseFloat(updatedPrimaryFee3) || 0,
+        juniorSecondaryFeeTerm1: parseFloat(updatedJuniorSecondaryFee1) || 0,
+        juniorSecondaryFeeTerm2: parseFloat(updatedJuniorSecondaryFee2) || 0,
+        juniorSecondaryFeeTerm3: parseFloat(updatedJuniorSecondaryFee3) || 0,
+
+        seniorSecondaryFeeTerm1: parseFloat(updatedSeniorSecondaryFee1) || 0,
+        seniorSecondaryFeeTerm2: parseFloat(updatedSeniorSecondaryFee2) || 0,
+        seniorSecondaryFeeTerm3: parseFloat(updatedSeniorSecondaryFee3) || 0,
         resultView: Number(resultView),
         cumulativeView: Number(req.body.cumulativeView), //Select cumulative view value
         positionView: req.body.positionView === 'on',

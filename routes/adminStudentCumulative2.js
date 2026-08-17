@@ -5,6 +5,8 @@ const auth = require('../middleware/auth');
 
 const router = express.Router();
 
+const paymentsCollection = db.collection('payments');
+
 router.get('/:id', auth, async (req, res) => {
   try {
 
@@ -68,6 +70,39 @@ router.get('/load/result', auth, async (req, res) => {
     if (!student) {
       return res.json({ exists: false });
     }
+
+    // Code for the payment check
+            // Only check that THIRD TERM has been paid
+const thirdTermPayment = await paymentsCollection.findOne({
+
+    schoolId: student.schoolID,
+
+    studentId: student._id,
+
+    academicSessionId: sessionId,
+
+    term: "term3",
+
+    paymentType: {
+        $in: [
+            "school_student",
+            "parent_student"
+        ]
+    }
+
+});
+
+if (!thirdTermPayment) {
+
+    return res.json({
+
+        success: false,
+
+        reason: "payment_required"
+
+    });
+
+}
 
     // School
     const school = await db.collection('users')
@@ -245,9 +280,13 @@ router.get('/load/result', auth, async (req, res) => {
 
     res.json({
 
-      exists: true,
+      // exists: true,
+
+      success: true,
 
       school,
+
+      student,
 
       studentName:
         student.studentFullName,

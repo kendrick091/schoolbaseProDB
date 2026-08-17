@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+
+    <link rel="stylesheet" href="/stylesheet/dashboard.css">
+    <link rel="stylesheet" href="/stylesheet/form.css">
+    <link rel="stylesheet" href="/parentStylesheet/parent.css">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="form-div">
+
+        <h2>Edit Parent</h2>
+
+        <form action="/addParent/edit/<%= parent._id %>" method="POST">
+
+            <div class="input-card">
+                <label>Parent Full Name</label><br>
+
+                <input
+                    type="text"
+                    name="parentFullName"
+                    value="<%= parent.parentFullName %>"
+                    required>
+            </div>
+
+            <div class="input-card">
+                <label>Phone Number</label><br>
+
+                <input
+                    type="text"
+                    id="parentPhone"
+                    name="phone"
+                    value="<%= parent.phone %>"
+                    required>
+            </div>
+            <div class="input-card">
+                            <label>Email</label><br>
+
+                            <input
+                                type="email"
+                                id="parentEmail"
+                                name="email"
+                                value="<%= parent.email %>"
+                                required>
+                        </div>
+
+            <h3>Assign Child(ren)</h3>
+
+<div id="student-list"></div>
+
+        <div class="button-group">
+
+                value="<%= parent.phone %>"
+                required>
+        </div>
+
+            <h3>Assign Child(ren)</h3>
+
+<div id="student-list"></div>
+
+            <div class="button-group">
+
+                <button class="btn" type="submit">
+                    Update Parent
+                </button>
+
+                <a href="/addParent" class="cancel-btn">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+<script>
+
+const selectedChildren = <%- JSON.stringify(
+    parent.children.map(id => id.toString())
+) %>;
+
+</script>
+<script src="/parent/editParent.js"></script>
+
+</body>
+</html>

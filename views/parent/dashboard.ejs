@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+
+    <link rel="stylesheet" href="/stylesheet/dashboard.css">
+    <link rel="stylesheet" href="/parentStylesheet/dashboard.css">
+</head>
+<body>
+
+<header class="top-bar">
+
+    <div>
+        <h2>SchoolBase</h2>
+        <small><%= school.schoolName %></small>
+    </div>
+
+    <div>
+        <a href="/parentLogin/logout">Logout</a>
+    </div>
+
+</header>
+
+
+<div class="container">
+
+    <div class="welcome-card">
+
+        <h2>
+            Welcome,
+            <%= parent.parentFullName %>
+        </h2>
+
+        <p>
+            Academic session: <%= session.academicSession %>
+        </p>
+
+        <p>
+            Email:
+            <%= parent.email %>
+        </p>
+
+        <p>
+            Phone:
+            <%= parent.phone %>
+        </p>
+
+    </div>
+
+
+    <div class="dashboard-grid">
+
+        <% students.forEach(student => { %>
+
+            <% if(parent.children.some(id => id.toString() === student._id.toString())) { %>
+
+            <div class="student-card">
+
+                <h3><%= student.studentFullName %></h3>
+
+                <p>
+                    Admission No:
+                    <strong><%= student.admissionNumber %></strong>
+                </p>
+
+                <p>
+                    Gender:
+                    <%= student.gender %>
+                </p>
+
+                <div class="action-buttons">
+
+                    <a href="/parentDashBoard/attendance/<%= student._id %>">
+                        Performance
+                    </a>
+
+                    <a href="/parentDashBoard/fees/<%= student._id %>">
+                        School Fees
+                    </a>
+
+                    <a href="/parentDashBoard/receipt/<%= student._id %>">
+                        Receipt
+                    </a>
+
+                </div>
+
+            </div>
+
+            <% } %>
+
+        <% }) %>
+
+    </div>
+
+</div>
+
+</body>
+</html>

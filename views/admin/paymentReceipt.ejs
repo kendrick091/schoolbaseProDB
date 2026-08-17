@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Payment Receipt
+    </title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+            background: #f2f2f2;
+            font-family: Arial, sans-serif;
+            color: #222;
+        }
+
+
+        .receipt-container {
+
+            width: 800px;
+            max-width: 95%;
+
+            margin: 30px auto;
+
+            background: white;
+
+            padding: 40px;
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.08);
+
+        }
+
+
+        .school-header {
+
+            text-align: center;
+
+            border-bottom: 2px solid #222;
+
+            padding-bottom: 20px;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .school-name {
+
+            font-size: 28px;
+
+            font-weight: bold;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .receipt-title {
+
+            font-size: 20px;
+
+            margin-top: 15px;
+
+            font-weight: bold;
+
+            letter-spacing: 1px;
+
+        }
+
+
+        .receipt-number {
+
+            text-align: right;
+
+            margin-bottom: 20px;
+
+            font-size: 13px;
+
+            color: #666;
+
+        }
+
+
+        .student-section {
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 15px;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .info-box {
+
+            border: 1px solid #ddd;
+
+            padding: 12px;
+
+            border-radius: 5px;
+
+        }
+
+
+        .info-label {
+
+            font-size: 12px;
+
+            color: #777;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .info-value {
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+        }
+
+
+        .payment-table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            margin-top: 20px;
+
+        }
+
+
+        .payment-table th,
+        .payment-table td {
+
+            border: 1px solid #ddd;
+
+            padding: 13px;
+
+            text-align: left;
+
+        }
+
+
+        .payment-table th {
+
+            background: #f5f5f5;
+
+        }
+
+
+        .total-row {
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+        }
+
+
+        .payment-status {
+
+            text-align: center;
+
+            margin: 25px 0;
+
+            padding: 12px;
+
+            border-radius: 5px;
+
+            background: #e8f7ee;
+
+            color: #198754;
+
+            font-weight: bold;
+
+        }
+
+
+        .footer {
+
+            border-top: 1px solid #ddd;
+
+            margin-top: 30px;
+
+            padding-top: 15px;
+
+            text-align: center;
+
+            color: #777;
+
+            font-size: 12px;
+
+        }
+
+
+        .buttons {
+
+            width: 800px;
+
+            max-width: 95%;
+
+            margin: 20px auto;
+
+            display: flex;
+
+            gap: 10px;
+
+            justify-content: center;
+
+        }
+
+
+        button,
+        .back-btn {
+
+            border: none;
+
+            padding: 12px 20px;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            text-decoration: none;
+
+        }
+
+
+        .print-btn {
+
+            background: #0d6efd;
+
+            color: white;
+
+        }
+
+
+        .back-btn {
+
+            background: #6c757d;
+
+            color: white;
+
+        }
+
+
+        @media print {
+
+            body {
+                background: white;
+            }
+
+            .receipt-container {
+
+                width: 100%;
+
+                max-width: none;
+
+                margin: 0;
+
+                box-shadow: none;
+
+                border-radius: 0;
+
+            }
+
+            .buttons {
+                display: none;
+            }
+
+        }
+
+
+        @media(max-width: 600px) {
+
+            .receipt-container {
+                padding: 20px;
+            }
+
+            .student-section {
+                grid-template-columns: 1fr;
+            }
+
+            .school-name {
+                font-size: 22px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="buttons">
+
+    <a
+        href="/paymentReceipts"
+        class="back-btn"
+    >
+        ← Back
+    </a>
+
+    <button
+        class="print-btn"
+        onclick="window.print()"
+    >
+        🖨 Print Receipt
+    </button>
+
+</div>
+
+
+
+<div class="receipt-container">
+
+
+    <!-- ===================================== -->
+    <!-- SCHOOL HEADER -->
+    <!-- ===================================== -->
+
+    <div class="school-header">
+
+        <div class="school-name">
+
+            <%= payment.school?.schoolName
+                || payment.school?.name
+                || 'SchoolBase School'
+            %>
+
+        </div>
+
+
+        <% if (payment.school?.address) { %>
+
+            <div>
+                <%= payment.school.address %>
+            </div>
+
+        <% } %>
+
+
+        <div class="receipt-title">
+
+            PAYMENT RECEIPT
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ===================================== -->
+    <!-- RECEIPT NUMBER -->
+    <!-- ===================================== -->
+
+    <div class="receipt-number">
+
+        Receipt Reference:
+
+        <strong>
+            <%= payment.reference || payment._id %>
+        </strong>
+
+    </div>
+
+
+
+    <!-- ===================================== -->
+    <!-- STUDENT INFORMATION -->
+    <!-- ===================================== -->
+
+    <div class="student-section">
+
+
+        <div class="info-box">
+
+            <div class="info-label">
+                Student Name
+            </div>
+
+            <div class="info-value">
+
+                <%= payment.student?.studentFullName
+                    || 'Unknown Student'
+                %>
+
+            </div>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <div class="info-label">
+                Admission Number
+            </div>
+
+            <div class="info-value">
+
+                <%= payment.student?.admissionNumber
+                    || '-'
+                %>
+
+            </div>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <div class="info-label">
+                Academic Session
+            </div>
+
+            <div class="info-value">
+
+                <%= payment.session?.sessionName
+                    || payment.session?.academicSession
+                    || payment.session?.name
+                    || '-'
+                %>
+
+            </div>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <div class="info-label">
+                Payment Date
+            </div>
+
+            <div class="info-value">
+
+                <%= payment.createdAt
+                    ? new Date(payment.createdAt).toLocaleDateString(
+                        'en-NG',
+                        {
+                            day: '2-digit',
+                            month: 'long',
+                            year: 'numeric'
+                        }
+                    )
+                    : '-'
+                %>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ===================================== -->
+    <!-- PAYMENT DETAILS -->
+    <!-- ===================================== -->
+
+    <table class="payment-table">
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    Description
+                </th>
+
+                <th>
+                    Term
+                </th>
+
+                <th>
+                    Payment Method
+                </th>
+
+                <th>
+                    Amount
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            <tr>
+
+                <td>
+
+                    School Fees
+
+                </td>
+
+
+                <td>
+
+                    <% if (payment.term === 'term1') { %>
+
+                        First Term
+
+                    <% } else if (payment.term === 'term2') { %>
+
+                        Second Term
+
+                    <% } else if (payment.term === 'term3') { %>
+
+                        Third Term
+
+                    <% } else { %>
+
+                        <%= payment.term || '-' %>
+
+                    <% } %>
+
+                </td>
+
+
+                <td>
+
+                    <%= payment.paymentMethod
+                        || 'Manual'
+                    %>
+
+                </td>
+
+
+                <td>
+
+                    ₦<%= Number(payment.amount || 0)
+                        .toLocaleString()
+                    %>
+
+                </td>
+
+            </tr>
+
+
+            <tr class="total-row">
+
+                <td colspan="3">
+
+                    TOTAL PAID
+
+                </td>
+
+                <td>
+
+                    ₦<%= Number(payment.amount || 0)
+                        .toLocaleString()
+                    %>
+
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+
+
+    <!-- ===================================== -->
+    <!-- STATUS -->
+    <!-- ===================================== -->
+
+    <div class="payment-status">
+
+        PAYMENT RECEIVED
+
+    </div>
+
+
+
+    <!-- ===================================== -->
+    <!-- FOOTER -->
+    <!-- ===================================== -->
+
+    <div class="footer">
+
+        <p>
+            This receipt was generated by SchoolBase.
+        </p>
+
+        <p>
+            Reference:
+            <%= payment.reference || payment._id %>
+        </p>
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

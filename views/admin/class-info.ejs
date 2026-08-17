@@ -93,9 +93,32 @@
                 <td><%= student.studentFullName %></td>
                 <td><%= student.gender %></td>
                 <td>
+                  <!--- code to promote student -->
+        <label for="newClassId">Promote to Class:</label>
+
+<select style="margin: 0 0 5px 0;"
+  class="promotion-select"
+  onchange="promoteStudent('<%= student._id %>', this, '<%= student.studentClass %>')"
+>
+  <option value="">
+    Select New Class
+  </option>
+
+  <% classList.forEach(cls => { %>
+
+    <option value="<%= cls._id %>">
+      <%= cls.className %>
+    </option>
+
+  <% }) %>
+</select>
+<br>
+
                   <a href="/classinfo/delete/<%= student._id %>">
-                <button class="btn delete" style="padding: 8px;">
-                    Delete</button></a>
+                    <button class="btn delete" style="padding: 8px;">
+                      Delete
+                    </button>
+                  </a>
                 </td>
               </tr>
             <% }) %>
@@ -103,6 +126,44 @@
         </table>
       </div>
     </section>
+
+    <div class="promotion-div" style="
+  padding: 12px;
+  background: #007780;
+  color: white;
+  display: inline-block;
+  border-radius: 8px;
+  margin-bottom: 15px;
+">
+
+  <h4 style="margin-top: 0;">
+    Promote All Students in this Class
+  </h4>
+
+  <select
+    id="bulkClassSelect"
+    style="padding: 8px; width: 100%; margin-bottom: 8px;"
+  >
+    <option value="">
+      Select New Class
+    </option>
+
+    <% classList.forEach(cls => { %>
+      <option value="<%= cls._id %>">
+        <%= cls.className %>
+      </option>
+    <% }) %>
+  </select>
+
+  <button
+    type="button"
+    style="padding: 10px; cursor: pointer;"
+    onclick="promoteAllStudents('<%= classInfo._id %>')"
+  >
+    Promote All
+  </button>
+
+</div>
 
     <!-- Teachers Table -->
     <section class="table-section">
@@ -145,5 +206,167 @@
 </div>
 <script src="/scriptFolder/menuToggle.js"></script>
 <script src="/scriptFolder/showDate.js"></script>
+
+
+// student promotion function
+<script>
+function promoteStudent(studentId, selectElement, currentClassId) {
+
+  const newClassId = selectElement.value;
+
+  // Nothing selected
+  if (!newClassId) {
+    return;
+  }
+
+  // Prevent selecting same class
+  if (newClassId === currentClassId) {
+    alert("The student is already in this class.");
+
+    selectElement.value = "";
+
+    return;
+  }
+
+  const selectedClassName =
+    selectElement.options[selectElement.selectedIndex].text;
+
+  const confirmed = confirm(
+    `Are you sure you want to promote this student to ${selectedClassName}?`
+  );
+
+  if (!confirmed) {
+    selectElement.value = "";
+    return;
+  }
+
+  // Disable dropdown while request is processing
+  selectElement.disabled = true;
+
+  fetch(`/classinfo/promote-student/${studentId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      newClassId: newClassId
+    })
+  })
+  .then(async res => {
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "Unable to promote student");
+    }
+
+    return data;
+  })
+  .then(data => {
+
+    alert(data.message);
+
+    // Reload class page because student has left this class
+    location.reload();
+
+  })
+  .catch(err => {
+
+    console.error("Promotion error:", err);
+
+    alert(err.message || "Error promoting student");
+
+    selectElement.value = "";
+    selectElement.disabled = false;
+
+  });
+}
+</script>
+
+<script>
+
+function promoteAllStudents(currentClassId) {
+
+  const selectElement = document.getElementById("bulkClassSelect");
+  const newClassId = selectElement.value;
+
+  // Make sure a class was selected
+  if (!newClassId) {
+    alert("Please select the class you want to promote the students to.");
+    return;
+  }
+
+  // Prevent promoting to the same class
+  if (newClassId === currentClassId) {
+    alert("The students are already in this class.");
+    return;
+  }
+
+  const selectedClassName =
+    selectElement.options[selectElement.selectedIndex].text;
+
+  const confirmed = confirm(
+    `Are you sure you want to promote ALL students in this class to ${selectedClassName}?`
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  // Disable button while processing
+  const button = document.querySelector(
+    '.promotion-div button'
+  );
+
+  button.disabled = true;
+  button.textContent = "Promoting...";
+
+  fetch(`/classinfo/promote-all`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      currentClassId,
+      newClassId
+    })
+  })
+
+  .then(async res => {
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(
+        data.message || "Unable to promote students."
+      );
+    }
+
+    return data;
+  })
+
+  .then(data => {
+
+    alert(data.message);
+
+    location.reload();
+
+  })
+
+  .catch(err => {
+
+    console.error("BULK PROMOTION ERROR:", err);
+
+    alert(err.message || "Error promoting students.");
+
+    button.disabled = false;
+    button.textContent = "Promote All";
+
+  });
+
+}
+
+</script>
+
 </body>
 </html>

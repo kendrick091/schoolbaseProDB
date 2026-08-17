@@ -10,6 +10,7 @@ const axios = require('axios'); //for the payment verification
 const student = db.collection('students');
 const classes = db.collection('classes');
 const academicSessions = db.collection('academicSessions')
+const studentsCollection = db.collection('students');
 
 router.get('/', auth, async (req, res) => {
     const schoolId = new ObjectId(req.user.id);
@@ -19,7 +20,7 @@ router.get('/', auth, async (req, res) => {
         .toArray();
 
     const students = await student
-        .find({ schoolID: schoolId, isActive: true })
+        .find({ schoolID: schoolId, isActive: true, payment: false})
         .toArray();
     
       const FEE_PER_STUDENT = 350;
@@ -38,13 +39,21 @@ router.get('/', auth, async (req, res) => {
     }));
 
     const pubKey = process.env.PAYSTACK_PUBLIC_KEY;
-    const sessions = await academicSessions
-  .find({ schoolID: new ObjectId(schoolId) })
-  .toArray();
+
+    //Academic session check
+    const activeSession = await academicSessions.findOne({
+      schoolID: schoolId,
+      isActive: true
+  });
+
+  if (!activeSession) {
+      return res.status(400).send("No active academic session found.");
+  }
     const school = await db.collection('users').findOne({ _id: new ObjectId(req.user.id) });
 
     res.render('admin/fees', {
       title: 'Fee Management',
+      students: studentsWithClass,
       schoolId: req.user.id,
       schoolEmail: school.email,   // <-- pass this
       paymentStatus: school.payment,
@@ -52,58 +61,352 @@ router.get('/', auth, async (req, res) => {
       feePerStudent: FEE_PER_STUDENT,
       totalSchoolFee: totalStudents * FEE_PER_STUDENT,
       paystackKey: pubKey
+      // academicSessionId: activeSession._id.toString(),
+      // academicSession: activeSession.academicSession
     });
 
 });
 
 
 router.post('/verify-school-payment', auth, async (req, res) => {
-  const { reference } = req.body;
- const secKey = process.env.PAYSTACK_SECRET_KEY;
-  try {
-    // 1️⃣ Verify payment with Paystack
-    const response = await axios.get(
-      `https://api.paystack.co/transaction/verify/${reference}`,
-      {
-        headers: {
-          Authorization: `Bearer ${secKey}`
-        }
-      }
-    );
 
-    if (response.data.data.status !== 'success') {
-      return res.json({ success: false, message: 'Payment not successful' });
+    const { reference, term } = req.body;
+
+    const secKey = process.env.PAYSTACK_SECRET_KEY;
+
+    try {
+
+        // ==========================================
+        // 1. VERIFY PAYMENT WITH PAYSTACK
+        // ==========================================
+
+        const response = await axios.get(
+            `https://api.paystack.co/transaction/verify/${reference}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${secKey}`
+                }
+            }
+        );
+
+
+        if (response.data.data.status !== 'success') {
+
+            return res.json({
+                success: false,
+                message: 'Payment was not successful'
+            });
+
+        }
+
+
+        // ==========================================
+        // 2. GET SCHOOL
+        // ==========================================
+
+        const schoolId =
+            new ObjectId(req.user.id);
+
+
+        // ==========================================
+        // 3. GET ACTIVE ACADEMIC SESSION
+        // ==========================================
+
+        const activeSession =
+            await academicSessions.findOne({
+
+                schoolID: schoolId,
+
+                isActive: true
+
+            });
+
+
+        if (!activeSession) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    'No active academic session found.'
+
+            });
+
+        }
+
+
+        // ==========================================
+        // 4. GET ACTIVE STUDENTS
+        // ==========================================
+
+        const students =
+            await studentsCollection.find({
+
+                schoolID: schoolId,
+
+                isActive: true
+
+            }).toArray();
+
+
+        if (students.length === 0) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    'No active students found.'
+
+            });
+
+        }
+
+
+        // ==========================================
+        // 5. FEE
+        // ==========================================
+
+        const FEE_PER_STUDENT = 350;
+
+        const totalStudents =
+            students.length;
+
+        const totalSchoolFee =
+            totalStudents * FEE_PER_STUDENT;
+
+
+        // ==========================================
+        // 6. CHECK BULK PAYMENT
+        // ==========================================
+
+        const existingBulkPayment =
+            await db.collection('payments').findOne({
+
+                schoolId: schoolId,
+
+                academicSessionId:
+                    activeSession._id,
+
+                paymentType:
+                    'school_bulk',
+
+                term: term
+
+            });
+
+
+        if (existingBulkPayment) {
+
+            return res.json({
+
+                success: false,
+
+                message:
+                    `${term} has already been paid.`
+
+            });
+
+        }
+
+
+        // ==========================================
+        // 7. CREATE SCHOOL BULK PAYMENT RECORD
+        // ==========================================
+
+        await db.collection('payments').insertOne({
+
+            reference: reference,
+
+            paymentType: 'school_bulk',
+
+            paymentMethod: 'paystack',
+
+            schoolId: schoolId,
+
+            academicSessionId:
+                activeSession._id,
+
+            academicSession:
+                activeSession.academicSession,
+
+            term: term,
+
+            totalStudents:
+                totalStudents,
+
+            feePerStudent:
+                FEE_PER_STUDENT,
+
+            amount:
+                totalSchoolFee,
+
+            createdAt:
+                new Date()
+
+        });
+
+
+        // ==========================================
+        // 8. CREATE PAYMENT FOR EACH STUDENT
+        // ==========================================
+
+        for (const stu of students) {
+
+            // Check if this particular
+            // student already has payment
+
+            const existingPayment =
+                await db.collection('payments').findOne({
+
+                    schoolId: schoolId,
+
+                    studentId: stu._id,
+
+                    academicSessionId:
+                        activeSession._id,
+
+                    paymentType:
+                        'school_student',
+
+                    term: term
+
+                });
+
+
+            // If already paid,
+            // don't create another record
+
+            if (existingPayment) {
+
+                continue;
+
+            }
+
+
+            // Create payment record
+
+            await db.collection('payments').insertOne({
+
+                reference: reference,
+
+                paymentType:
+                    'school_student',
+
+                paymentMethod:
+                    'paystack',
+
+                schoolId:
+                    schoolId,
+
+                studentId:
+                    stu._id,
+
+                academicSessionId:
+                    activeSession._id,
+
+                academicSession:
+                    activeSession.academicSession,
+
+                amount:
+                    FEE_PER_STUDENT,
+
+                term:
+                    term,
+
+                createdAt:
+                    new Date()
+
+            });
+
+
+            // ======================================
+            // UPDATE THIS STUDENT
+            // ======================================
+
+            await studentsCollection.updateOne(
+
+                {
+                    _id: stu._id
+                },
+
+                {
+                    $set: {
+                        payment: true
+                    }
+                }
+
+            );
+
+        }
+
+
+        // ==========================================
+        // 9. UPDATE SCHOOL PAYMENT
+        // ==========================================
+
+        await db.collection('users').updateOne(
+
+            {
+                _id: schoolId
+            },
+
+            {
+                $set: {
+
+                    payment: true,
+
+                    paidAt: new Date(),
+
+                    paymentReference:
+                        reference
+
+                }
+
+            }
+
+        );
+
+
+        // ==========================================
+        // 10. SUCCESS
+        // ==========================================
+
+        return res.json({
+
+            success: true,
+
+            message:
+                'School fees payment verified successfully',
+
+            totalStudents:
+                totalStudents,
+
+            totalAmount:
+                totalSchoolFee
+
+        });
+
+
+    } catch (err) {
+
+        console.error(
+            'VERIFY SCHOOL PAYMENT ERROR:',
+            err
+        );
+
+        return res.status(500).json({
+
+            success: false,
+
+            message:
+                'Failed to verify school payment'
+
+        });
+
     }
 
-    const schoolId = req.user.id; // assuming auth sets req.user
-
-    // 2️⃣ Update the school's payment field to true
-    await db.collection('users').updateOne(
-      { _id: new ObjectId(schoolId) },
-      {
-        $set: {
-          payment: true,
-          paidAt: new Date(),
-          paymentReference: reference
-        }
-      }
-    );
-
-    // 3️⃣ Optionally save a payment record for audit
-    await db.collection('payments').insertOne({
-      reference,
-      schoolId: new ObjectId(schoolId),
-      amount: response.data.data.amount / 100, // Paystack returns in kobo
-      paymentType: 'school_bulk',
-      createdAt: new Date()
-    });
-
-    return res.json({ success: true });
-
-  } catch (err) {
-    console.error('VERIFY SCHOOL PAYMENT ERROR:', err);
-    return res.status(500).json({ success: false });
-  }
 });
 
 module.exports = router;

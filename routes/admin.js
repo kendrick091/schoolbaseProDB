@@ -3,8 +3,8 @@ const { ObjectId } = require('mongodb');
 const auth = require('../middleware/auth');
 const role = require('../middleware/roles');
 const db = require('../../schoolbaseProDB/db.js');
-const multer = require('multer');
-const path = require('path');
+// const multer = require('multer');
+// const path = require('path');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt')
 
@@ -16,25 +16,40 @@ const academicSession = db.collection('academicSessions')
 const teacher = db.collection('teachers');
 const subjects = db.collection('subjects');
 
+const path = require("path");
+const multer = require("multer");
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/logos');
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
-});
-const upload = multer({
-    storage,
-    fileFilter: (req, file, cb) => {
-        if (file.mimetype.startsWith('image/')) {
-            cb(null, true);
+        let uploadPath = "uploads/";
+
+        if (file.fieldname === "schoolLogo") {
+            uploadPath += "logos";
+        } else if (file.fieldname === "studentPassport") {
+            uploadPath += "passport";
         } else {
-            cb(new Error('Only images allowed'), false);
+            uploadPath += "others";
         }
+
+        cb(null, uploadPath);
+    },
+
+    filename: (req, file, cb) => {
+        const uniqueName = Date.now() + path.extname(file.originalname);
+        cb(null, uniqueName);
     }
 });
 
+const upload = multer({
+    storage,
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith("image/")) {
+            cb(null, true);
+        } else {
+            cb(new Error("Only images allowed"));
+        }
+    }
+});
 // ======= ADMIN DASHBOARD ==========
 
 router.get('/', auth, async (req, res) => {
@@ -234,7 +249,7 @@ router.post('/addTeacher', auth, async (req, res) => {
 
 
 //Add student
-router.post('/addStudent', auth, async (req, res) => {
+router.post('/addStudent', upload.single('studentPassport'), auth, async (req, res) => {
   try {
     const students = db.collection('students');
     const academicSessions = db.collection('academicSessions');
@@ -283,10 +298,15 @@ router.post('/addStudent', auth, async (req, res) => {
       admissionNumber,
       studentFullName: req.body.studentFullName.trim(),
       parentNo: req.body.parentNo,
+      age: req.body.studentAge,
+      stateOfOrigin:  req.body.stateOfOrigin,
+      LGA: req.body.localGovernmentOfOrigin,
+      physicallyChallenged: req.body.physicallyChallenged,
       gender: req.body.gender,
       studentClass: new ObjectId(req.body.studentClass),
       schoolID: schoolId,
       academicSessionId: activeSession._id,
+      studentPassport: `/uploads/passport/${req.file.filename}`, // Save passport in path
       payment: false,
       tokenHash,
       tShozakNo,

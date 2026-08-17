@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Pay Student Fee</title>
+
+    <link
+        rel="stylesheet"
+        href="/stylesheet/payEachStudentFee.css"
+    >
+
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+
+</head>
+
+
+<body>
+
+<center>
+
+<div
+    class="container"
+    style="width:100%; max-width:500px;"
+>
+
+    <div class="payment-card">
+
+        <h4>
+            <%= academicSession.academicSession %>
+        </h4>
+
+
+        <h2>
+            School Fee Payment
+        </h2>
+
+
+        <p class="student-name">
+            <%= student.studentFullName %>
+        </p>
+
+
+        <p>
+            Admission No:
+            <strong>
+                <%= student.admissionNumber %>
+            </strong>
+        </p>
+
+
+        <div class="amount-box">
+
+            <span>
+                Amount
+            </span>
+
+            <strong>
+                ₦<%= price.toLocaleString() %>
+            </strong>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Select Term
+            </label>
+
+            <select
+                id="paymentTerm"
+                onchange="checkPaymentStatus()"
+            >
+
+                <option value="">
+                    Select Term
+                </option>
+
+                <option value="term1">
+                    1st Term
+                </option>
+
+                <option value="term2">
+                    2nd Term
+                </option>
+
+                <option value="term3">
+                    3rd Term
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- WARNING -->
+
+        <div
+            id="alreadyPaidMessage"
+            class="already-paid"
+            style="display:none;"
+        >
+
+            ✓ This student has already paid
+            for this term.
+
+        </div>
+
+
+        <!-- PAY BUTTON -->
+
+        <button
+            type="button"
+            id="payButton"
+            onclick="payStudentFee()"
+            disabled
+        >
+
+            Select Term
+
+        </button>
+
+
+        <a
+            href="/fees"
+            class="back-link"
+        >
+            ← Back to Fee Management
+        </a>
+
+    </div>
+
+</div>
+
+</center>
+
+
+<script>
+
+    // Payments already made for this student
+    const studentPayments =
+        <%- JSON.stringify(payments.map(payment => payment.term)) %>;
+
+
+    function checkPaymentStatus() {
+
+        const term =
+            document.getElementById('paymentTerm').value;
+
+        const payButton =
+            document.getElementById('payButton');
+
+        const warning =
+            document.getElementById('alreadyPaidMessage');
+
+
+        // Reset
+        warning.style.display = 'none';
+
+        payButton.disabled = false;
+
+
+        if (!term) {
+
+            payButton.disabled = true;
+
+            payButton.innerText =
+                'Select Term';
+
+            return;
+
+        }
+
+
+        // Check whether this term has been paid
+
+        if (studentPayments.includes(term)) {
+
+            warning.style.display = 'block';
+
+            payButton.disabled = true;
+
+            payButton.innerText =
+                'Already Paid';
+
+            return;
+
+        }
+
+
+        // Not paid
+
+        payButton.disabled = false;
+
+        payButton.innerText =
+            'Pay ₦<%= price.toLocaleString() %>';
+
+    }
+
+
+    function payStudentFee() {
+
+        const term =
+            document.getElementById('paymentTerm').value;
+
+
+        if (!term) {
+
+            alert(
+                'Please select a term.'
+            );
+
+            return;
+
+        }
+
+
+        // Extra frontend protection
+
+        if (studentPayments.includes(term)) {
+
+            alert(
+                'This student has already paid for this term.'
+            );
+
+            return;
+
+        }
+
+
+        const handler =
+            PaystackPop.setup({
+
+                key:
+                    '<%= paystackKey %>',
+
+                email:
+                    '<%= school.email %>',
+
+                amount:
+                    <%= price %> * 100,
+
+                currency:
+                    'NGN',
+
+                metadata: {
+
+                    paymentType:
+                        'school_student',
+
+                    paymentMethod:
+                        'paystack',
+
+                    studentId:
+                        '<%= student._id %>',
+
+                    schoolId:
+                        '<%= school._id %>',
+
+                    academicSessionId:
+                        '<%= academicSession._id %>',
+
+                    term:
+                        term
+
+                },
+
+
+                callback:
+                    function(response) {
+
+
+                        console.log(
+                            'Paystack reference:',
+                            response.reference
+                        );
+
+
+                        fetch(
+                            '/adminPayForEachStudent/verify-student-payment',
+                            {
+
+                                method:
+                                    'POST',
+
+                                credentials:
+                                    'same-origin',
+
+                                headers: {
+
+                                    'Content-Type':
+                                        'application/json'
+
+                                },
+
+                                body:
+                                    JSON.stringify({
+
+                                        reference:
+                                            response.reference,
+
+                                        studentId:
+                                            '<%= student._id %>',
+
+                                        term:
+                                            term
+
+                                    })
+
+                            }
+
+                        )
+
+                        .then(res =>
+                            res.json()
+                        )
+
+                        .then(data => {
+
+                            if (data.success) {
+
+                                alert(
+                                    'Payment successful!'
+                                );
+
+                                window.location.href =
+                                    '/fees';
+
+                            }
+
+                            else {
+
+                                alert(
+                                    data.message ||
+                                    'Payment verification failed.'
+                                );
+
+                            }
+
+                        })
+
+                        .catch(error => {
+
+                            console.error(error);
+
+                            alert(
+                                'Unable to verify payment.'
+                            );
+
+                        });
+
+                    },
+
+
+                onClose:
+                    function() {
+
+                        console.log(
+                            'Payment window closed'
+                        );
+
+                    }
+
+            });
+
+
+        handler.openIframe();
+
+    }
+
+</script>
+
+</body>
+
+</html>

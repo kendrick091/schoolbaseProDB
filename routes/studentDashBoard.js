@@ -15,6 +15,7 @@ const schoolCollection = db.collection('users');
 const subjectsCollection = db.collection('subjects');
 const academicCollection = db.collection('academicSessions');
 const resultsCollection = db.collection('results')
+const paymentsCollection = db.collection('payments');
 
 router.get('/', auth, async (req, res) => {
     const student = await studentsCollection.findOne({
@@ -24,6 +25,9 @@ router.get('/', auth, async (req, res) => {
   const sessions = await academicCollection.find({
     schoolID: new ObjectId(student.schoolID)
   }).toArray();
+
+  let paymentAllowed = false;
+
 
   const school = await schoolCollection.findOne({
     _id: new ObjectId(student.schoolID)
@@ -50,6 +54,36 @@ router.get('/result/load', auth, async (req, res) => {
     const studentId = student._id;
     // const classId = new ObjectId(student.studentClass);
 
+    // Code for the payment check
+    const payment = await paymentsCollection.findOne({
+
+    schoolId: student.schoolID,
+
+    studentId: student._id,
+
+    academicSessionId: new ObjectId(academicSessionId),
+
+    term,
+    
+    paymentType: {
+        $in: [
+            "school_student",
+            "parent_student"
+        ]
+    }
+
+});
+
+if (!payment) {
+    return res.json({
+
+    success: false,
+
+    reason: "payment_required"
+
+});
+}
+
     const school = await schoolCollection.findOne({
       _id: new ObjectId(student.schoolID)
     })
@@ -60,7 +94,15 @@ router.get('/result/load', auth, async (req, res) => {
       { $lookup: { from: 'subjects', localField: 'subjectId', foreignField: '_id', as: 'subject' } },
       { $unwind: '$subject' }
     ]).toArray();
-    if (!results.length) return res.json({ exists: false });
+
+    // If no results found, return a response indicating that
+    if (!results.length) return res.json({
+
+    success: false,
+
+    reason: "no_result"
+
+});
 
     const classId = new ObjectId(results[0].classId); // ✅ use result class
 
@@ -108,7 +150,7 @@ function getRemark(score) {
   if(score >= 60) return "Very Good";
   if(score >= 50) return "Good";
   if(score >= 45) return "Fair";
-  if(score >= 40) return "Pass";
+  // if(score >= 40) return "Pass";
   return "Fail";
 }
 
@@ -229,8 +271,11 @@ const psychomotorData = await db.collection('psychomotor').findOne({
 });
 
 res.json({
-  exists: true,
+  // exists: true,
+  // paymentRequired: false,
+  success: true,
   school,
+  student,
   studentName: student.studentFullName,
   className: classInfo ? classInfo.className : '',
   attendance: attendanceText,

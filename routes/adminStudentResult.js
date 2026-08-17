@@ -13,6 +13,7 @@ const schoolCollection = db.collection('users');
 const subjectsCollection = db.collection('subjects');
 const academicCollection = db.collection('academicSessions');
 const resultsCollection = db.collection('results')
+const paymentsCollection = db.collection('payments');
 
 router.get('/:id', auth, async (req, res)=>{
      const school = await schoolCollection.findOne({
@@ -51,6 +52,36 @@ router.get('/result/load', auth, async (req, res) => {
 
     if (!student) return res.json({ exists: false });
 
+    // Code for the payment check
+        const payment = await paymentsCollection.findOne({
+    
+        schoolId: student.schoolID,
+    
+        studentId: student._id,
+    
+        academicSessionId: new ObjectId(academicSessionId),
+
+        term,
+    
+        paymentType: {
+            $in: [
+                "school_student",
+                "parent_student"
+            ]
+        }
+    
+    });
+    
+    if (!payment) {
+        return res.json({
+    
+        success: false,
+    
+        reason: "payment_required"
+    
+    });
+    }
+
     // 2. Get school from student (IMPORTANT FIX)
     const school = await schoolCollection.findOne({
       _id: new ObjectId(student.schoolID)
@@ -80,7 +111,14 @@ router.get('/result/load', auth, async (req, res) => {
       { $unwind: '$subject' }
     ]).toArray();
 
-    if (!results.length) return res.json({ exists: false });
+    // If no results found, return a response indicating that
+    if (!results.length) return res.json({
+
+    success: false,
+
+    reason: "no_result"
+
+});
 
     const classId = results[0].classId
       ? new ObjectId(results[0].classId)
@@ -305,8 +343,10 @@ for (const subjectId in groupedSubjects) {
 
     // 15. response
     return res.json({
-      exists: true,
+      // exists: true,
+      success: true,
       school,
+      student,
       studentName: student.studentFullName,
       className: classInfo?.className || '',
       attendance: attendanceText,

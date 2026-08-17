@@ -5,6 +5,9 @@ const auth = require('../middleware/auth');
 
 const router = express.Router();
 
+const paymentsCollection = db.collection('payments');
+
+
 router.get('/:id', auth, async (req, res) => {
   try {
 
@@ -69,6 +72,39 @@ router.get('/load/result', auth, async (req, res) => {
       return res.json({ exists: false });
     }
 
+    // Code for the payment check
+            // Only check that THIRD TERM has been paid
+const thirdTermPayment = await paymentsCollection.findOne({
+
+    schoolId: student.schoolID,
+
+    studentId: student._id,
+
+    academicSessionId: sessionId,
+
+    term: "term3",
+
+    paymentType: {
+        $in: [
+            "school_student",
+            "parent_student"
+        ]
+    }
+
+});
+
+if (!thirdTermPayment) {
+
+    return res.json({
+
+        success: false,
+
+        reason: "payment_required"
+
+    });
+
+}
+
     // Get school
     const school = await db.collection('users')
       .findOne({ _id: new ObjectId(student.schoolID) });
@@ -81,9 +117,14 @@ router.get('/load/result', auth, async (req, res) => {
       })
       .toArray();
 
-    if (!results.length) {
-      return res.json({ exists: false });
-    }
+    // If no results found, return a response indicating that
+    if (!results.length) return res.json({
+
+    success: false,
+
+    reason: "no_result"
+
+});
 
     // Get subjects
     const subjectIds = [
@@ -161,8 +202,10 @@ router.get('/load/result', auth, async (req, res) => {
       .findOne({ _id: sessionId });
 
     res.json({
-      exists: true,
+      // exists: true,
+      success: true,
       school,
+      student,
       studentName: student.studentFullName,
       admissionNumber: student.admissionNumber,
       className: classData?.className || "",
@@ -178,10 +221,14 @@ router.get('/load/result', auth, async (req, res) => {
 
   } catch (err) {
 
-    console.error("ADMIN CUMULATIVE LOAD ERROR:", err);
+    console.error("ADMIN CUMULATIVE LOAD ERROR:");
+
+    console.error(err);
 
     res.status(500).json({
-      exists: false
+        success: false,
+        reason: "server_error",
+        message: err.message
     });
 
   }

@@ -22,24 +22,48 @@ async function loadResult() {
 
   const data = await res.json();
 
-  if (!data.exists) {
-    resultArea.innerHTML = '<p>No result available for this term.</p>';
-    printBtn.style.display = 'none';
+  if (!data.success) {
+
+    if(data.reason === "payment_required"){
+
+    resultArea.innerHTML = `
+        <div class="payment-warning">
+            <h2>Fee Not Paid</h2>
+            <p>Your school fee for this academic session has not been paid.</p>
+        </div>
+    `;
+
+    printBtn.style.display = "none";
+
     return;
-  }
+}else if(data.reason === "no_result"){
+    resultArea.innerHTML = `
+        <div class="payment-warning">
+            <h2>No Result Available</h2>
+            <p>No result has been uploaded for this term.</p>
+        </div>
+    `;
+
+}
+    return;
+}
 
   let html = `
     <div class="schoolInfo">
       <div class="logo">
         <img 
-            src="${data.school?.schoolLogo || '/images/default-school.png'}" 
-            alt="School Logo">
+            src="${data.student?.studentPassport || '/images/default-school.png'}" 
+            alt="_">
       </div>
       <div class="schoolHead">
         <div class="headSchoolName">${data.school.schoolname}</div>
         <div class="headSchoolAddress">${data.school.address}</div>
       </div>
-      <div class="logo"></div>
+      <div class="logo">
+      <img 
+            src="${data.school?.schoolLogo || '/images/default-school.png'}" 
+            alt="School Logo">
+      </div>
     </div>
     <div class="result-header">
   <table class="header-table">

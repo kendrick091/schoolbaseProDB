@@ -17,7 +17,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-const PORT = 3000;
+const PORT = process.env.SERVERPORT || 3000;
 
 
 async function startServer() {
@@ -38,9 +38,16 @@ async function startServer() {
     app.use('/adminResult', require('./routes/adminResult'));
     app.use('/settings', require('./routes/adminSetting'));
     app.use('/fees', require('./routes/fees'));
+    app.use('/paymentReceipts', require('./routes/paymentReceipts'));
+    app.use('/adminPayForEachStudent', require('./routes/adminPayForEachStudent'));
     app.use('/adminStudentResult', require('./routes/adminStudentResult'));
     app.use('/adminStudentCumulative', require('./routes/adminStudentCumulative'));
     app.use('/adminStudentCumulative2', require('./routes/adminStudentCumulative2'));
+
+    // Add parent route
+    app.use('/addParent', require('./routes/adminAddParentRoutes'));
+    app.use('/parentLogin', require('./routes/parentLogin'));
+    app.use('/parentDashBoard', require('./routes/parentDashBoard'));
 
     app.use('/teacherLogin', require('./routes/teacherLogin'));
     app.use('/teacherDashBoard', require('./routes/teacherDashBoard'));
@@ -55,6 +62,7 @@ async function startServer() {
 
     app.use('/superAdminDashboard', require('./routes/superAdmin'));
     app.use('/superAdminLogin', require('./routes/superAdminLogin'));
+    app.use('/superAdminCreatePayment', require('./routes/superAdminCreatePayment'));
 
     app.listen(PORT, () => {
       console.log(`🚀 SchoolBase running on port ${PORT}`);

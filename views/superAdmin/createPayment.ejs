@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> update</title>
+    <link rel="stylesheet" href="/superAdminCss/superStyle.css">
+    <link rel="stylesheet" href="/stylesheet/table.css">
+    <link rel="stylesheet" href="/stylesheet/form.css">
+</head>
+<body>
+    <h2><%= school ? school.schoolname : 'N/A' %></h2>
+    <% if (action === 'view_student') { %>
+        <h3>Students</h3>
+
+        <!-------- create payment for all students ------>
+      <form
+    action="/superAdminCreatePayment/createPaymentForAllStudents/<%= school._id %>"
+    method="POST"
+    onsubmit="return confirmBulkPayment()"
+>
+
+    <label for="academicSessionId">
+        Academic Session
+    </label>
+
+    <select
+        name="academicSessionId"
+        id="academicSessionId"
+        required
+    >
+        <option value="">
+            Select Academic Session
+        </option>
+
+        <% academicSessions.forEach(session => { %>
+
+            <option value="<%= session._id %>">
+                <%= session.academicSession %>
+            </option>
+
+        <% }) %>
+    </select>
+
+
+    <label for="term">
+        Term
+    </label>
+
+    <select
+        name="term"
+        id="term"
+        required
+    >
+        <option value="">
+            Select Term
+        </option>
+
+        <option value="term1">
+            Term 1
+        </option>
+
+        <option value="term2">
+            Term 2
+        </option>
+
+        <option value="term3">
+            Term 3
+        </option>
+    </select>
+
+
+    <button
+        type="submit"
+        class="btn green-btn"
+    >
+        Create Payment For All Students
+    </button>
+
+</form>
+
+
+<script>
+
+function confirmBulkPayment() {
+
+    return confirm(
+        "Are you sure you want to create payment for all active students?"
+    );
+
+}
+
+</script>
+
+
+    
+    <div class="table-header">
+    <h2><%= students.length %> Students</h2>
+
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search Student..."
+      onkeyup="searchTable()"
+    />
+  </div>
+            <table id="studentTable">
+                <thead>
+                <tr>
+                    <th onclick="sortTable(1)">Name</th>
+                    <th>Create Payment</th>
+                    <th>View Payments</th>
+                </tr>
+                </thead>
+
+               <tbody>
+                    <% if (students.length === 0) { %>
+                        <tr>
+                            <td colspan="3">No students found</td>
+                        </tr>
+                    <% } %>
+
+                    <% students.forEach((student) => { %>
+                        <tr>
+                            <td><%= student.studentFullName %></td>
+                            <td>
+                                <a href="/superAdminCreatePayment/createPayment/<%= student._id %>" class="btn-edit">
+                                    <button class="btn green-btn">Create Payment</button>
+                                </a>
+                                <a href="/superAdminCreatePayment/deletePayment/<%= student._id %>">
+                                    <button class="btn red-btn">Delete Payment</button>
+                                </a>
+                            </td>
+
+                            <td>
+                            
+                                <a href="/superAdminDashboard/receipt/<%= school._id %>" class="btn-edit">
+                                    <button class="btn green-btn">Receipt</button>
+                                </a>
+                            </td> 
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+            <div id="pagination"></div>
+        </div>
+        <% }else{ %>
+        <h3>Create Payment</h3>
+        
+<h3>Create Payment for <%= student.studentFullName %></h3>
+
+<form
+    action="/superAdminCreatePayment/createPayment/<%= student._id %>"
+    method="POST"
+    id="paymentForm"
+>
+
+    <input
+        type="hidden"
+        name="studentId"
+        value="<%= student._id %>"
+    >
+
+    <input
+        type="hidden"
+        name="schoolId"
+        value="<%= student.schoolID %>"
+    >
+
+    <input
+        type="hidden"
+        name="paymentType"
+        value="school_student"
+    >
+
+    <input
+        type="hidden"
+        name="paymentMethod"
+        value="manual"
+    >
+
+
+    <!-- ACADEMIC SESSION -->
+    <label for="academicSession">
+        Academic Session
+    </label>
+
+    <select
+        name="academicSessionId"
+        id="academicSession"
+        required
+    >
+
+        <option value="">
+            Select Academic Session
+        </option>
+
+        <% if (academicSessions.length > 0) { %>
+
+            <% academicSessions.forEach(session => { %>
+
+                <option
+                    value="<%= session._id %>"
+                >
+                    <%= session.academicSession %>
+                </option>
+
+            <% }) %>
+
+        <% } else { %>
+
+            <option value="">
+                No academic sessions available
+            </option>
+
+        <% } %>
+
+    </select>
+
+
+    <!-- TERM -->
+    <label for="term">
+        Term
+    </label>
+
+    <select
+        name="term"
+        id="term"
+        required
+    >
+
+        <option value="">
+            Select Term
+        </option>
+
+        <option value="term1">
+            Term 1
+        </option>
+
+        <option value="term2">
+            Term 2
+        </option>
+
+        <option value="term3">
+            Term 3
+        </option>
+
+    </select>
+
+
+    <!-- AMOUNT -->
+    <label for="amount">
+        Amount
+    </label>
+
+    <input
+        type="number"
+        id="amount"
+        name="amount"
+        value="350"
+        required
+        readonly
+    >
+
+
+    <!-- PAYMENT STATUS -->
+    <p id="paymentStatus"></p>
+
+
+    <!-- CREATE PAYMENT BUTTON -->
+    <button
+        type="submit"
+        id="createPaymentButton"
+        disabled
+    >
+        Select Session and Term
+    </button>
+
+</form>
+
+
+<script>
+
+    const studentId =
+        "<%= student._id %>";
+
+
+    const academicSession =
+        document.getElementById(
+            "academicSession"
+        );
+
+
+    const term =
+        document.getElementById(
+            "term"
+        );
+
+
+    const paymentButton =
+        document.getElementById(
+            "createPaymentButton"
+        );
+
+
+    const paymentStatus =
+        document.getElementById(
+            "paymentStatus"
+        );
+
+
+    async function checkPayment() {
+
+        const academicSessionId =
+            academicSession.value;
+
+        const selectedTerm =
+            term.value;
+
+
+        // Nothing selected yet
+        if (
+            !academicSessionId ||
+            !selectedTerm
+        ) {
+
+            paymentButton.disabled =
+                true;
+
+            paymentButton.innerText =
+                "Select Session and Term";
+
+            paymentStatus.innerText =
+                "";
+
+            return;
+
+        }
+
+
+        // Show checking message
+        paymentButton.disabled =
+            true;
+
+        paymentButton.innerText =
+            "Checking...";
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `/superAdminCreatePayment/check-payment/${studentId}/${academicSessionId}/${selectedTerm}`
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok || !data.success) {
+
+                throw new Error(
+                    data.message ||
+                    "Failed to check payment"
+                );
+
+            }
+
+
+            // =========================
+            // STUDENT HAS PAID
+            // =========================
+
+            if (data.paid) {
+
+                paymentButton.innerText =
+                    "Already Paid";
+
+                paymentButton.disabled =
+                    true;
+
+                paymentButton.style.backgroundColor =
+                    "green";
+
+                paymentButton.style.color =
+                    "white";
+
+                paymentStatus.innerText =
+                    "This student has already paid for this term.";
+
+                paymentStatus.style.color =
+                    "green";
+
+            }
+
+
+            // =========================
+            // STUDENT HAS NOT PAID
+            // =========================
+
+            else {
+
+                paymentButton.innerText =
+                    "Create Payment";
+
+                paymentButton.disabled =
+                    false;
+
+                paymentButton.style.backgroundColor =
+                    "";
+
+                paymentButton.style.color =
+                    "";
+
+                paymentStatus.innerText =
+                    "No payment found for this term.";
+
+                paymentStatus.style.color =
+                    "red";
+
+            }
+
+
+        } catch (error) {
+
+            console.error(error);
+
+
+            paymentButton.disabled =
+                true;
+
+            paymentButton.innerText =
+                "Unable to Check Payment";
+
+
+            paymentStatus.innerText =
+                "Could not check payment status.";
+
+            paymentStatus.style.color =
+                "red";
+
+        }
+
+    }
+
+
+    // Check whenever session changes
+    academicSession.addEventListener(
+        "change",
+        checkPayment
+    );
+
+
+    // Check whenever term changes
+    term.addEventListener(
+        "change",
+        checkPayment
+    );
+
+</script>
+```
+
+        <% } %>
+<script src="/scriptFolder/searchTable.js"></script>
+</body>
+</html>

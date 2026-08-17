@@ -48,8 +48,53 @@
         <label>Update School Address</label>
         <input type="text" name="updatedAddress" value="<%= school.address %>">
         
-        <label>Update Gmail</label>
+        <label>Update School Email</label>
         <input type="email" name="updatedEmail" value="<%= school.email %>">
+
+        <!-- <label>Bank Account number</label>
+        <input type="text" name="updatedBankAccount" value="<%= school.bankAccount || '' %>">
+        <label>Bank Name</label>
+        <input type="text" name="updatedBankName" value="<%= school.bankName || '' %>"> -->
+        
+      </div>
+      </div>
+
+         <!---- Update Primary Fee --------->
+
+         <div class="card">
+         <div class="remark-row">
+        <h3>Update School Fees</h3>
+        <label>Update Primary 1st Term School Fee Amount</label>
+        <input type="number" name="updatedPrimaryFee1" value="<%= school.primaryFeeTerm1 || '0.00' %>" step="1000">
+
+        <label>Update Primary 2nd Term School Fee Amount</label>
+        <input type="number" name="updatedPrimaryFee2" value="<%= school.primaryFeeTerm2 || '0.00' %>" step="1000">
+
+        <label>Update Primary 3rd Term School Fee Amount</label>
+        <input type="number" name="updatedPrimaryFee3" value="<%= school.primaryFeeTerm3 || '0.00' %>" step="1000">
+
+         <!---- Update Junior Secondary Fee --------->
+
+        <label>Update Junior Secondary 1st Term School Fee Amount</label>
+        <input type="number" name="updatedJuniorSecondaryFee1" value="<%= school.juniorSecondaryFeeTerm1 || '0.00' %>" step="1000">
+
+        <label>Update Junior Secondary 2nd Term School Fee Amount</label>
+        <input type="number" name="updatedJuniorSecondaryFee2" value="<%= school.juniorSecondaryFeeTerm2 || '0.00' %>" step="1000">
+
+        <label>Update Junior Secondary 3rd Term School Fee Amount</label>
+        <input type="number" name="updatedJuniorSecondaryFee3" value="<%= school.juniorSecondaryFeeTerm3 || '0.00' %>" step="1000">
+
+         <!---- Update Secondary Fee --------->
+
+        <label>Update Senior Secondary 1st Term School Fee Amount</label>
+        <input type="number" name="updatedSeniorSecondaryFee1" value="<%= school.seniorSecondaryFeeTerm1 || '0.00' %>" step="1000">
+
+        <label>Update Senior Secondary 2nd Term School Fee Amount</label>
+        <input type="number" name="updatedSeniorSecondaryFee2" value="<%= school.seniorSecondaryFeeTerm2 || '0.00' %>" step="1000">
+
+        <label>Update Senior Secondary 3rd Term School Fee Amount</label>
+        <input type="number" name="updatedSeniorSecondaryFee3" value="<%= school.seniorSecondaryFeeTerm3 || '0.00' %>" step="1000">
+
       </div>
     </div>
 

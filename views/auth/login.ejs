@@ -17,6 +17,8 @@
                 <button id="admin" class="role-btn active">Admin</button>
                 <button id="teacher" class="role-btn">Teacher</button>
                 <button id="student" class="role-btn">Student</button>
+                <!-- <button id="parent" class="role-btn">Parent</button> -->
+                
             </div>
 
             <!-- Admin -->
@@ -32,6 +34,14 @@
                 <h3>Teacher Login</h3>
                 <input type="text" name="teacherPhoneNo" placeholder="Phone number" required>
                 <input type="password" name="teacherToken" placeholder="token" required>
+                <button class="login-btn">Login</button>
+            </form>
+
+            <!-- Parent Login -->
+            <form action="/parentLogin" method="post" id="parentLoginIn" class="login-form">
+                <h3>Parent Login</h3>
+                <input type="text" name="parentPhoneNo" placeholder="Phone number" required>
+                <input type="password" name="parentToken" placeholder="Enter Token" required>
                 <button class="login-btn">Login</button>
             </form>
 

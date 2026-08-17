@@ -10,7 +10,7 @@ async function connectDB() {
   if (db) return db;
 
   await client.connect();
-  console.log('✅ Connected to MongoDB Atlas');
+  console.log('✅ Connected to MongoDB');
 
   db = client.db('schoolbase');
   return db;

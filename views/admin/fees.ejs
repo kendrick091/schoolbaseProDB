@@ -61,7 +61,24 @@
     <p>Fee per Student: ₦<strong><%= feePerStudent %></strong></p>
   </div>
 
-  <% if (paymentStatus === false){%>
+  <% if (students.length > 0 ){%>
+    <div style="margin-top:15px;">
+
+    <label><strong>Select Term</strong></label>
+
+    <select id="paymentTerm" style="
+        padding:10px;
+        border-radius:6px;
+        margin-left:10px;
+    ">
+        <option value="">Choose Term</option>
+        <option value="term1">First Term</option>
+        <option value="term2">Second Term</option>
+        <option value="term3">Third Term</option>
+    </select>
+
+</div>
+
     <button
     onclick="paySchoolFees()"
     style="
@@ -82,6 +99,56 @@
   
 </div>
 
+<!---- List student that has not pay schoolfees---->
+<div class="table-container">
+  <div class="table-header">
+    <h2>Students</h2>
+
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search student..."
+      onkeyup="searchTable()"
+    />
+
+    </div>
+  <table id="studentTable">
+    <thead>
+      <tr>
+        <th>Student ID</th>
+        <th>Full Name</th>
+        <th>Class</th>
+        <th>Payment Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% students.forEach(student => { %>
+        <tr>
+          <td><%= student.admissionNumber %></td>
+          <td><%= student.studentFullName %></td>
+          <td><%= student.className %></td>
+          <td><%= student.payment ? 'Paid' : 'Not Paid' %></td>
+          <td>
+            <a href="/adminPayForEachStudent/<%= student._id %>">
+              <button class="pay-button" style="
+                background: #198754;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+              ">
+                Pay ₦350
+              </button>
+            </a>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+
+  </div>
 
     <%}else{%>
       <p>unauthorized</p>

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/stylesheet/dashboard.css">
     <link rel="stylesheet" href="/stylesheet/menuToggle.css">
     <link rel="stylesheet" href="/stylesheet/overlay.css">
+    <link rel="stylesheet" href="/stylesheet/fileReader.css">
 </head>
 <body>
     <div class="container_content">
@@ -17,7 +18,7 @@
         <h2 class="logo">SchoolBase</h2>
 
         <nav>
-            <a href="#" class="active">Dashboard</a>
+            <a href="/admin" class="active">Dashboard</a>
             <a href="/admin/student">Students</a>
             <a href="/teachers">Teachers</a>
             <a href="/sessions">Academic Sessions</a>
@@ -128,7 +129,7 @@
 
 <!-- Add Student -->
 <div class="modal" id="studentModal">
-    <form action="/admin/addStudent" method="post">
+    <form action="/admin/addStudent" method="post" enctype="multipart/form-data">
         <h2>Add Student</h2>
         <input type="hidden" name="schoolID" value="<%= showUser._id %>">
         <input type="hidden" name="token" value="<%= showUser.token %>">
@@ -139,8 +140,19 @@
         <%}else{%>
             <div style="color: rgb(233, 58, 52);">No Academic Session Yet</div>
         <%}%>
+        <div class="input-group file-upload">
+            <img id="passportPreview" src="/images/default-user.png" alt="Passport Preview">
+            <label for="passport">Student Passport</label>
+            <input type="file" id="passport" name="studentPassport" accept="image/*">
+        </div>
+
         <input type="text" name="studentFullName" placeholder="Student Full Name" required>
-        <input type="text" name="parentNo" placeholder="Parent Phone No. (optional)" required>
+        <input type="text" name="parentNo" placeholder="Parent Phone No. (optional)">
+        <input type="text" name="studentAge" placeholder="Student Age. (optional)">
+        <input type="text" name="stateOfOrigin" placeholder="State of Origin. (optional)">
+        <input type="text" name="localGovernmentOfOrigin" placeholder="L.G.A. of Origin (optional)">
+        <input type="text" name="physicallyChallenged" placeholder="Physically Challenged.(optional) If yes, write the illness.">
+        
         <select name="gender" id="">
             <option value="">--Select Gender--</option>
             <option value="male">Male</option>
@@ -237,6 +249,21 @@
             <button onclick="openModal('subjectModal')">Add Subject</button>
         </section>
 
+        <!-- Add parent to school href here -->
+        <div class="actions">
+            <a href="/addParent">
+                <button class="btn">Add Parent</button>
+            </a>
+            <a href="/paymentReceipts">
+
+                <button class="btn"><span>
+                    🧾
+                </span>
+
+                Payment Receipts
+                </button>
+            </a>
+        </div>
 
         <!-- Extra Section -->
         <section class="extra">
@@ -267,5 +294,6 @@
     <script src="/scriptFolder/menuToggle.js"></script>
     <script src="/scriptFolder/openModal.js"></script>
     <script src="/scriptFolder/autoSubmitLogo.js"></script>
+    <script src="/scriptFolder/fileReader.js"></script>
 </body>
 </html>
