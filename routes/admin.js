@@ -306,7 +306,7 @@ router.post('/addStudent', upload.single('studentPassport'), auth, async (req, r
       studentClass: new ObjectId(req.body.studentClass),
       schoolID: schoolId,
       academicSessionId: activeSession._id,
-      studentPassport: `/uploads/passport/${req.file.filename}`, // Save passport in path
+      // studentPassport: `/uploads/passport/${req.file.filename}`, // Save passport in path (just updated this this morning)
       payment: false,
       tokenHash,
       tShozakNo,
