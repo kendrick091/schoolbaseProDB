@@ -85,3 +85,61 @@ input:checked + .slider:before {
   border-radius: 5px;
   border: 1px solid #ccc;
 }
+
+/* =========================================
+   STAMP + SIGNATURE
+========================================= */
+
+.current-stamp {
+    margin-top: 20px;
+    margin-bottom: 25px;
+}
+
+
+.current-stamp h4 {
+    margin-bottom: 10px;
+}
+
+
+.stamp-signature-roll {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+.stamp-signature-roll input[type="file"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+}
+
+
+.stamp-signature-roll small {
+    color: #666;
+    font-size: 13px;
+}
+
+
+.stamp-signature-image {
+    display: block;
+
+    max-width: 400px;
+    max-height: 250px;
+
+    width: auto;
+    height: auto;
+
+    object-fit: contain;
+
+    border: 1px solid #ddd;
+
+    border-radius: 8px;
+
+    padding: 10px;
+
+    background: white;
+
+    margin-top: 10px;
+}

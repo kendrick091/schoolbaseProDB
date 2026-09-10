@@ -37,9 +37,13 @@ async function startServer() {
     app.use('/subjects', require('./routes/adminSubject'));
     app.use('/adminResult', require('./routes/adminResult'));
     app.use('/settings', require('./routes/adminSetting'));
+
     app.use('/fees', require('./routes/fees'));
     app.use('/paymentReceipts', require('./routes/paymentReceipts'));
+    app.use('/manualParentPayments', require('./routes/manualParentPayments'));
     app.use('/adminPayForEachStudent', require('./routes/adminPayForEachStudent'));
+    app.use('/manualPaymentReceipts', require('./routes/manualPaymentReceipts'));
+
     app.use('/adminStudentResult', require('./routes/adminStudentResult'));
     app.use('/adminStudentCumulative', require('./routes/adminStudentCumulative'));
     app.use('/adminStudentCumulative2', require('./routes/adminStudentCumulative2'));

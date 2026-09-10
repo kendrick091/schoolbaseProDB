@@ -36,7 +36,7 @@
 
   <h1>Settings</h1>
 
-  <form action="/settings/update" method="POST" class="settings-form">
+  <form action="/settings/update" method="POST" enctype="multipart/form-data" class="settings-form">
 
     <!-- Code to update school name, email etc --->
     <div class="card">
@@ -211,6 +211,92 @@
   </div>
 </div>
 
+<div class="card">
+
+  <h3>
+    Stamp & Signature
+  </h3>
+
+  <p>
+    Upload a clear picture of the school's
+    official stamp and administrator's signature.
+    This image will appear on official
+    SchoolBase documents and receipts.
+  </p>
+
+
+  <!-- CURRENT IMAGE -->
+
+  <% if (school.stampSignature) { %>
+
+    <div class="current-stamp">
+
+      <h4>
+        Current Stamp & Signature
+      </h4>
+
+      <img
+        src="/uploads/stamp/<%= school.stampSignature %>"
+        alt="School Stamp and Signature"
+        class="stamp-signature-image"
+      >
+
+    </div>
+
+  <% } %>
+
+
+
+  <!-- UPLOAD -->
+
+  <div class="stamp-signature-roll">
+
+    <label for="stampSignature">
+
+      Upload Stamp & Signature
+
+    </label>
+
+
+    <input
+      type="file"
+      name="stampSignature"
+      id="stampSignature"
+      accept="image/jpeg,image/jpg,image/png,image/webp"
+    >
+
+
+    <small>
+      Upload a clear JPG, PNG or WEBP image.
+      Maximum size: 5MB.
+    </small>
+
+
+    <!-- PREVIEW -->
+
+    <div
+      id="stampPreviewContainer"
+      style="display:none;"
+    >
+
+      <h4>
+        New Image Preview
+      </h4>
+
+
+      <img
+        id="stampPreview"
+        src=""
+        alt="Stamp and Signature Preview"
+        class="stamp-signature-image"
+      >
+
+    </div>
+
+  </div>
+
+</div>
+
 
     <button type="submit" class="btn-save">Save Settings</button>
   </form>
@@ -219,5 +305,6 @@
 </div>
 <script src="/scriptFolder/searchTable.js"></script>
 <script src="/scriptFolder/menuToggle.js"></script>
+<script src="/scriptFolder/stampSignature.js"></script>
 </body>
 </html>

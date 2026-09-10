@@ -37,6 +37,7 @@
     <main class="content">
          <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
+         <div class="right" style="text-align: right;">
     <form 
     action="/admin/update-logo" 
     method="POST" 
@@ -58,6 +59,7 @@
         onclick="document.getElementById('logoInput').click()"
     >
 </form>
+</div>
 
 
         <header class="topbar">
@@ -247,23 +249,47 @@
             <button onclick="openModal('sessionModal')">Create Session</button>
             <button onclick="openModal('classModal')">Add Class</button>
             <button onclick="openModal('subjectModal')">Add Subject</button>
+            <button><a href="/addParent">
+                Add Parent
+            </a></button>
         </section>
 
         <!-- Add parent to school href here -->
-        <div class="actions">
-            <a href="/addParent">
-                <button class="btn">Add Parent</button>
+        <session class="actions">
+            <div class="split-btn">
+            <a
+                href="/manualParentPayments"
+                class="nav-link"
+            >
+                <button>
+                💵 Record Parent Payment
+                </button>
             </a>
+
+            <a
+                href="/manualPaymentReceipts"
+                class="nav-link"
+            >
+                <button>
+                🧾 Payment History & Receipt
+                </button>
+            </a>
+            </div>
+            <div class="split-btn">
             <a href="/paymentReceipts">
 
-                <button class="btn"><span>
+                <button class="btn" 
+                style="background: rgb(74, 146, 74);
+                width: 100%;"><span>
                     🧾
                 </span>
 
-                Payment Receipts
+                SchoolBase Payment History & Receipt
                 </button>
             </a>
-        </div>
+            </div>
+
+        </session>
 
         <!-- Extra Section -->
         <section class="extra">

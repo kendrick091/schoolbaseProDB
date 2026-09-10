@@ -169,6 +169,11 @@
     transition: background 0.3s;
 }
 
+.actions a{
+    text-decoration: none;
+    color: white;
+}
+
 .actions button:hover {
     background: #4338ca;
 }
@@ -197,6 +202,21 @@
 
 .box li {
     margin-bottom: 0.5rem;
+}
+
+.split-btn{
+    display: flex;
+    gap: 0.5rem;
+}
+
+.split-btn a{
+    flex: 1;
+    font-size: clamp(0.7rem, 1vw, 1rem);
+}
+
+.red{
+    background-color: #ef4444;
+    margin-top: 0.3rem;
 }
 
 /* ================= MOBILE DESIGN ================= */

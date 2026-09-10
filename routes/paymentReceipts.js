@@ -18,6 +18,8 @@ router.get('/', auth, async (req, res) => {
 
         const schoolId = new ObjectId(req.user.id);
 
+        const schoolName = schoolId.schoolname;
+
         // ----------------------------------------------
         // Get school payments
         // ----------------------------------------------
@@ -94,6 +96,8 @@ router.get('/', auth, async (req, res) => {
                     paymentMethod: 1,
 
                     createdAt: 1,
+
+                    schoolName,
 
                     studentId: 1,
 
