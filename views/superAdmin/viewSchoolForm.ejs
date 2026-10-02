@@ -11,33 +11,16 @@
 <body>
    <div class="dashboard">
 
-  <!-- Sidebar (UNCHANGED) -->
-  <aside class="sidebar">
-    <h2 class="logo">SchoolBase</h2>
-
-    <nav>
-      <a href="/admin">Dashboard</a>
-      <a href="/admin/student">Students</a>
-      <a href="/teachers">Teachers</a>
-      <a href="/sessions">Academic Sessions</a>
-      <a href="/classes">Classes</a>
-      <a href="/subjects">Subjects</a>
-      <a href="/fees">Fee Management</a>
-      <a href="/adminResult">Results</a>
-      <a href="/settings" class="active">Settings</a>
-    </nav>
-
-    <a href="/logout" class="logout">Logout</a>
-  </aside>
-
   <!-- Main -->
   <main class="content">
-  <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
   <h1>Settings</h1>
 
-  <form action="/settings/update" method="POST" enctype="multipart/form-data" class="settings-form">
-
+<form
+    action="/superAdminViewSchoolForm/update/<%= school._id %>"
+    method="POST"
+    class="settings-form"
+>
     <!-- Code to update school name, email etc --->
     <div class="card">
       <div class="remark-row">
@@ -65,14 +48,12 @@
         </select>
 
         <!---- THIS CODE SHOULD BE IN THE SUPER ADMIN 
-        DASHBOARD or maybe not yet---->
-        <label for="">paystackSubaccountCode:</label>
-        <h5><%= school.paystackSubaccountCode || '' %>**-</h5>
+        DASHBOARD---->
+        <label for="">paystackSubaccountCode</label>
+        <input type="text" name="updatedPaystackSubaccountCode" 
+        value="<%= school.paystackSubaccountCode || '' %>" placeholder="Enter Paystack Subaccount Code">
 
-        <label for="">version</label>
-        <h3 style="color: rgb(49, 128, 49);"><%= school.version || '' %></h3>
-
-        <!-- <label for="">paystackSubaccountVerified</label>
+        <label for="">paystackSubaccountVerified</label>
         <input type="text" name="updatedPaystackSubaccountVerified" 
         value="<% if(school.paystackSubaccountVerified === true) 
         { %>true<% } else { %>false<% } %>" placeholder="Enter Paystack Subaccount Verified">
@@ -81,7 +62,15 @@
         <input type="text" name="updatedPaystackSubaccountActive" 
         value="<% if(school.paystackSubaccountActive === true) 
         { %>true<% } else { %>false<% } %>" placeholder="Enter Paystack Subaccount Active">
-         -->
+        
+        <label for="">Version</label>
+        <select type="text" name="updatedVersion" 
+        value="<%= school.version || '' %>" placeholder="Enter Version">
+        <option value=""><%= school.version || '' %></option>
+          <option value="regular">Regular</option>
+          <option value="pro">Pro</option>
+        </select>
+
       </div>
       </div>
 
@@ -237,19 +226,6 @@
   </div>
 </div>
 
-<div class="card">
-
-  <h3>
-    Stamp & Signature
-  </h3>
-
-  <p>
-    Upload a clear picture of the school's
-    official stamp and administrator's signature.
-    This image will appear on official
-    SchoolBase documents and receipts.
-  </p>
-
 
   <!-- CURRENT IMAGE -->
 
@@ -271,55 +247,6 @@
 
   <% } %>
 
-
-
-  <!-- UPLOAD -->
-
-  <div class="stamp-signature-roll">
-
-    <label for="stampSignature">
-
-      Upload Stamp & Signature
-
-    </label>
-
-
-    <input
-      type="file"
-      name="stampSignature"
-      id="stampSignature"
-      accept="image/jpeg,image/jpg,image/png,image/webp"
-    >
-
-
-    <small>
-      Upload a clear JPG, PNG or WEBP image.
-      Maximum size: 5MB.
-    </small>
-
-
-    <!-- PREVIEW -->
-
-    <div
-      id="stampPreviewContainer"
-      style="display:none;"
-    >
-
-      <h4>
-        New Image Preview
-      </h4>
-
-
-      <img
-        id="stampPreview"
-        src=""
-        alt="Stamp and Signature Preview"
-        class="stamp-signature-image"
-      >
-
-    </div>
-
-  </div>
 
 </div>
 

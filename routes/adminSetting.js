@@ -223,6 +223,9 @@ router.post(
 
         updatedBankAccount,
         updatedBankName,
+        // updatedPaystackSubaccountCode,
+        // updatedPaystackSubaccountVerified,
+        // updatedPaystackSubaccountActive,
 
         updatedPrimaryFee1,
         updatedPrimaryFee2,
@@ -281,8 +284,14 @@ router.post(
 
         bankName:
           updatedBankName || '',
+        
+        // paystackSubaccountCode:
+        //   updatedPaystackSubaccountCode || '',
+        
+        paystackSubaccountVerified: true,
 
-
+        paystackSubaccountActive: true,
+        
         primaryFeeTerm1:
           parseFloat(
             updatedPrimaryFee1

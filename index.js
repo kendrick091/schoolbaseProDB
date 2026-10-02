@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
+const axios = require('axios');
 
 const { connectDB } = require('./db');
 
@@ -59,6 +60,7 @@ async function startServer() {
     app.use('/teacherResult', require('./routes/teacherResult'));
     app.use('/teacherPsychomotor', require('./routes/teacherPsychomotor'));
     app.use('/teacherRemark', require('./routes/teacherRemark'));
+    app.use('/teacherStatement', require('./routes/teacherStatement'))
 
     app.use('/studentLogin', require('./routes/studentLogin'));
     app.use('/studentDashBoard', require('./routes/studentDashBoard'));
@@ -67,6 +69,7 @@ async function startServer() {
     app.use('/superAdminDashboard', require('./routes/superAdmin'));
     app.use('/superAdminLogin', require('./routes/superAdminLogin'));
     app.use('/superAdminCreatePayment', require('./routes/superAdminCreatePayment'));
+    app.use('/superAdminViewSchoolForm', require('./routes/superAdminViewSchoolForm'));
 
     app.listen(PORT, () => {
       console.log(`🚀 SchoolBase running on port ${PORT}`);

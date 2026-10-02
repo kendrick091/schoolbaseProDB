@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/stylesheet/menuToggle.css">
     <link rel="stylesheet" href="/stylesheet/table.css">
     <link rel="stylesheet" href="/stylesheet/form.css">
+    <link rel="stylesheet" href="/stylesheet/proVersionBanner.css">
     <script src="https://js.paystack.co/v1/inline.js"></script>
 
 </head>
@@ -45,6 +46,75 @@
       <span class="date" id="todayDate"></span>
     </header>
 
+    <% if (school.version === 'pro') { %>
+
+<!-- ======================================================
+     SCHOOLBASE PRO WELCOME BANNER
+====================================================== -->
+
+<div class="schoolbase-pro-banner">
+
+    <div class="pro-banner-content">
+
+        <div class="pro-badge">
+            ★ SCHOOLBASE PRO
+        </div>
+
+        <h2>
+            Your School is Powered by Excellence
+        </h2>
+
+        <p>
+            Welcome to the <strong>SchoolBase Pro experience.</strong>
+            Your school has chosen a more advanced way to manage
+            students, results, school fees and everyday school
+            administration.
+        </p>
+
+        <p class="pro-small-text">
+            Thank you for trusting SchoolBase to be part of your
+            school's journey toward smarter and more efficient
+            school management.
+        </p>
+
+    </div>
+
+    <div class="pro-banner-icon">
+        <div class="pro-star">
+            ★
+        </div>
+
+        <span>PRO</span>
+    </div>
+
+</div>
+
+
+<!-- ======================================================
+     PRO SCHOOL FEES SECTION
+====================================================== -->
+
+<div class="pro-section-header">
+
+    <div>
+        <span class="section-label">
+            SCHOOL FEES MANAGEMENT
+        </span>
+
+        <h2>
+            School Fees
+        </h2>
+
+        <p>
+            Manage your school's fee payments easily and securely.
+        </p>
+    </div>
+
+</div>
+
+
+<% } else { %>
+    
     <div style="
   margin: 20px 0;
   padding: 20px;
@@ -149,6 +219,7 @@
   </table>
 
   </div>
+  <%}%>
 
     <%}else{%>
       <p>unauthorized</p>

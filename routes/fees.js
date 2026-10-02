@@ -54,6 +54,7 @@ router.get('/', auth, async (req, res) => {
     res.render('admin/fees', {
       title: 'Fee Management',
       students: studentsWithClass,
+      school,
       schoolId: req.user.id,
       schoolEmail: school.email,   // <-- pass this
       paymentStatus: school.payment,

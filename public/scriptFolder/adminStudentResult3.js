@@ -250,20 +250,48 @@ function viewHeadTeacherRemark(){
     html += ``;
   }else{
     html += `<div class="head-teacher-remark">
+    <div class="head-teacher-remark-div">
     <strong>Head Teacher's Remark:</strong>
-    ${data.headTeacherRemark}
+    ${data.headTeacherRemark}</div>
+    <br>
+    <div class="receipt-stamp-container">
+    <img
+                src="/uploads/stamp/${data.school.stampSignature}"
+                alt="School Stamp and Signature"
+                class="receipt-stamp"
+            >
+    </div>
   </div>`;
   }
 }
 
-function viewFormTeacherRemark(){
-  if(!data.formTeacherRemark){
-    html += ``;
-  }else{
-    html += `<div class="head-teacher-remark">
-    <strong>Form Teacher's Remark:</strong>
-    ${data.formTeacherRemark}
-  </div>`;
+function viewFormTeacherRemark() {
+
+  // Existing Form Teacher Remark
+  if (data.formTeacherRemark) {
+
+    html += `
+      <div class="head-teacher-remark">
+
+        <strong>Form Teacher's Remark:</strong>
+        ${data.formTeacherRemark}
+
+      </div>
+    `;
+  }
+
+
+  // New Manual Teacher Statement
+  if (data.manualRemark) {
+
+    html += `
+      <div class="head-teacher-remark">
+
+        <strong>Teacher's Statement:</strong>
+        ${data.manualRemark}
+
+      </div>
+    `;
   }
 }
 

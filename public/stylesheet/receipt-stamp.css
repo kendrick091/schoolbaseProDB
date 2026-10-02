@@ -1,0 +1,94 @@
+
+/* =========================================
+   SCHOOL STAMP & SIGNATURE
+   ========================================= */
+
+.receipt-stamp-container {
+    width: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 12px;
+    margin-bottom: 5px;
+    padding: 5px 0;
+}
+
+.receipt-stamp {
+    display: block;
+    width: 100px;
+    max-width: 45%;
+    height: auto;
+    object-fit: contain;
+
+    /* Keeps the stamp clean on the result */
+    opacity: 0.91;
+
+    /* Slightly blends the image into the document */
+    mix-blend-mode: multiply;
+}
+
+
+/* =========================================
+   REMARK SECTION
+   ========================================= */
+
+.head-teacher-remark {
+    margin-top: 12px;
+    padding: 0;
+    border-top: 1px solid #ddd;
+    font-size: 12px;
+    line-height: 1.2;
+    display: flex;
+}
+.head-teacher-remark-div{
+    width: 85%;
+}
+
+.head-teacher-remark strong {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+
+/* =========================================
+   PRINT VERSION
+   ========================================= */
+
+@media print {
+
+    .receipt-stamp-container {
+        margin-top: 10px;
+        margin-bottom: 0;
+        padding: 0;
+    }
+
+    .receipt-stamp {
+        width: 170px;
+        max-width: none;
+        opacity: 1;
+        mix-blend-mode: multiply;
+    }
+
+    .head-teacher-remark {
+        border-top: 1px solid #999;
+        page-break-inside: avoid;
+    }
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 600px) {
+
+    .receipt-stamp {
+        width: 150px;
+        max-width: 55%;
+    }
+
+    .head-teacher-remark {
+        font-size: 13px;
+        padding: 8px 10px;
+    }
+}

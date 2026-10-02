@@ -34,6 +34,14 @@ function showDashboard() {
                     </span>)
                 </div>
             </button>
+            <hr>
+            <div>
+                <a href="/superAdminViewSchoolForm/${schoolId}">
+                    <button class="btn blue-btn">
+                        View School Form
+                    </button>
+                </a>
+            </div>
         </div>
     `;
 }

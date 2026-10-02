@@ -9,12 +9,14 @@
     <link rel="stylesheet" href="/parentStylesheet/dashboard.css">
 </head>
 <body>
-
+<% if (school.version !== 'pro'){%>
+    <h1>This School Did Not Enable The Professional Version</h1>
+<%}else{%>
 <header class="top-bar">
 
     <div>
         <h2>SchoolBase</h2>
-        <small><%= school.schoolName %></small>
+        <small><%= school.schoolname %></small>
     </div>
 
     <div>
@@ -72,9 +74,9 @@
 
                 <div class="action-buttons">
 
-                    <a href="/parentDashBoard/attendance/<%= student._id %>">
+                    <!-- <a href="/parentDashBoard/attendance/<%= student._id %>">
                         Performance
-                    </a>
+                    </a> -->
 
                     <a href="/parentDashBoard/fees/<%= student._id %>">
                         School Fees
@@ -95,6 +97,7 @@
     </div>
 
 </div>
+<%}%>
 
 </body>
 </html>

@@ -70,7 +70,7 @@
         <th>#</th>
         <th onclick="sortTable(0)">Name ⬍</th>
         <th onclick="sortTable(1)">Class ⬍</th>
-        <th>Payment</th>
+        <!-- <th>Payment</th> -->
         <th>Actions</th>
       </tr>
     </thead>
@@ -81,9 +81,9 @@
           <td><%= student.admissionNumber %></td>
           <td><%= student.studentFullName %></td>
           <td><%= student.className || '—' %></td>
-          <td>
-            <%= student.payment ? 'Paid' : 'Unpaid' %>
-          </td>
+          <!-- <td>
+            <%= student.gender %>
+          </td> -->
           <td class="actions">
             <a href="/edit/<%= student._id %>">
                 <button class="btn edit">Edit</button>

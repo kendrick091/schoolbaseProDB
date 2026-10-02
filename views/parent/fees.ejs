@@ -1,228 +1,322 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    
+
+    <title>School Fees</title>
+
     <link rel="stylesheet" href="/stylesheet/dashboard.css">
     <link rel="stylesheet" href="/parentStylesheet/dashboard.css">
+    <link rel="stylesheet" href="/parentStylesheet/payFee.css">
+
 </head>
+
 <body>
-   <div class="fees-container">
 
-    <h2>School Fees</h2>
+<div class="fees-container">
 
-    <h3>
-        <%= student.studentFullName %>
-    </h3>
+    <div class="fees-card">
 
-    <p>
-        Admission No:
-        <strong>
-            <%= student.admissionNumber %>
-        </strong>
-    </p>
+        <h2>School Fees</h2>
 
-    <p>
-        Class:
-        <strong>
-            <%= studentClass.className %>
-        </strong>
-    </p>
+        <!-- ==========================================
+             STUDENT INFORMATION
+        =========================================== -->
 
-    <p>
-        Academic Session:
-        <strong>
-            <%= session.academicSession %>
-        </strong>
-    </p>
+        <div class="student-info">
 
+            <h3>
+                <%= student.studentFullName %>
+            </h3>
 
-    <hr>
+            <p>
+                Admission No:
+                <strong>
+                    <%= student.admissionNumber %>
+                </strong>
+            </p>
 
+            <p>
+                Class:
+                <strong>
+                    <%= studentClass.className %>
+                </strong>
+            </p>
 
-    <!-- ==========================
-         TERM 1
-    =========================== -->
-
-    <div class="term-card">
-
-        <h3>Term 1</h3>
-
-        <p>
-            School Fees:
-            <strong>
-                ₦<%= fees.term1.toLocaleString() %>
-            </strong>
-        </p>
+        </div>
 
 
-        <% const term1Paid =
-            payments.some(
-                payment =>
-                    payment.term === 'term1'
-            );
-        %>
+        <hr>
 
 
-        <% if (term1Paid) { %>
+        <!-- ==========================================
+             SELECT SESSION AND TERM
+        =========================================== -->
 
-            <button
-                class="btn paid-btn"
-                disabled
-            >
-                Already Paid
-            </button>
+        <h3>Fee Details</h3>
 
-        <% } else { %>
+        <div class="form-group">
 
-            <form
-                action="/parentDashBoard/pay-fees/<%= student._id %>"
-                method="POST"
-            >
+            <label for="sessionId">
+                Academic Session
+            </label>
 
-                <input
-                    type="hidden"
-                    name="term"
-                    value="term1"
-                >
+            <select id="sessionId" required>
 
-                <button
-                    type="submit"
-                    class="btn pay-btn"
-                >
-                    Pay ₦<%= fees.term1.toLocaleString() %>
-                </button>
+                <% allAcademicSessions.forEach((option) => { %>
 
-            </form>
+                    <option
+                        value="<%= option._id %>"
+                        <%= session && option._id.toString() === session._id.toString() ? 'selected' : '' %>
+                    >
+                        <%= option.academicSession %>
+                    </option>
 
-        <% } %>
+                <% }); %>
 
-    </div>
+            </select>
+
+        </div>
 
 
+        <div class="form-group">
 
-    <!-- ==========================
-         TERM 2
-    =========================== -->
+            <label for="term">
+                Term
+            </label>
 
-    <div class="term-card">
+            <select id="term" required>
 
-        <h3>Term 2</h3>
+                <option value="term1">1st Term</option>
+                <option value="term2">2nd Term</option>
+                <option value="term3">3rd Term</option>
 
-        <p>
-            School Fees:
-            <strong>
-                ₦<%= fees.term2.toLocaleString() %>
-            </strong>
-        </p>
+            </select>
 
-
-        <% const term2Paid =
-            payments.some(
-                payment =>
-                    payment.term === 'term2'
-            );
-        %>
+        </div>
 
 
-        <% if (term2Paid) { %>
+        <!-- ==========================================
+             CURRENT FEE
+        =========================================== -->
 
-            <button
-                class="btn paid-btn"
-                disabled
-            >
-                Already Paid
-            </button>
+        <div class="fee-box">
 
-        <% } else { %>
+            <p>
+                School Fee for Selected Term
+            </p>
 
-            <form
-                action="/parentDashBoard/pay-fees/<%= student._id %>"
-                method="POST"
-            >
+            <h3 id="schoolFee">
+                ₦0
+            </h3>
 
-                <input
-                    type="hidden"
-                    name="term"
-                    value="term2"
-                >
-
-                <button
-                    type="submit"
-                    class="btn pay-btn"
-                >
-                    Pay ₦<%= fees.term2.toLocaleString() %>
-                </button>
-
-            </form>
-
-        <% } %>
-
-    </div>
+        </div>
 
 
+        <!-- ==========================================
+             PAYMENT SUMMARY
+        =========================================== -->
 
-    <!-- ==========================
-         TERM 3
-    =========================== -->
+        <div class="fee-summary">
 
-    <div class="term-card">
+            <div class="summary-box">
 
-        <h3>Term 3</h3>
+                <h4>
+                    Total Fee
+                </h4>
 
-        <p>
-            School Fees:
-            <strong>
-                ₦<%= fees.term3.toLocaleString() %>
-            </strong>
-        </p>
+                <strong id="totalFee">
+                    ₦0
+                </strong>
 
-
-        <% const term3Paid =
-            payments.some(
-                payment =>
-                    payment.term === 'term3'
-            );
-        %>
+            </div>
 
 
-        <% if (term3Paid) { %>
+            <div class="summary-box">
 
-            <button
-                class="btn paid-btn"
-                disabled
-            >
-                Already Paid
-            </button>
+                <h4>
+                    Amount Paid
+                </h4>
 
-        <% } else { %>
+                <strong id="amountPaid">
+                    ₦0
+                </strong>
+
+            </div>
+
+
+            <div class="summary-box">
+
+                <h4>
+                    Remaining
+                </h4>
+
+                <strong id="remainingAmount">
+                    ₦0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================================
+             PAYMENT FORM
+        =========================================== -->
+
+        <div id="paymentSection">
+
+            <h3>
+                Make Payment
+            </h3>
 
             <form
                 action="/parentDashBoard/pay-fees/<%= student._id %>"
                 method="POST"
+                id="paymentForm"
             >
 
                 <input
                     type="hidden"
-                    name="term"
-                    value="term3"
+                    name="sessionId"
+                    id="formSessionId"
                 >
+
+                <input
+                    type="hidden"
+                    name="term"
+                    id="formTerm"
+                >
+
+
+                <div class="form-group">
+
+                    <label for="amount">
+                        Amount to Pay
+                    </label>
+
+                    <input
+                        type="number"
+                        id="amount"
+                        name="amount"
+                        min="1"
+                        step="1"
+                        required
+                    >
+
+                </div>
+
 
                 <button
                     type="submit"
-                    class="btn pay-btn"
+                    class="pay-button"
+                    id="payButton"
                 >
-                    Pay ₦<%= fees.term3.toLocaleString() %>
+                    Pay Now
                 </button>
 
             </form>
 
-        <% } %>
+        </div>
+
+
+        <!-- ==========================================
+             COMPLETED MESSAGE
+        =========================================== -->
+
+        <div
+            id="completedMessage"
+            class="completed hidden"
+        >
+            This term's school fees have been fully paid.
+        </div>
+
+
+        <!-- ==========================================
+             PAYMENT HISTORY
+        =========================================== -->
+
+        <div class="payment-history">
+
+            <h3>
+                Payment History
+            </h3>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Method</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="paymentHistory">
+
+                    <% if (paymentHistory && paymentHistory.length > 0) { %>
+
+                        <% paymentHistory.forEach(payment => { %>
+
+                            <tr>
+
+                                <td>
+                                    <%= new Date(payment.createdAt).toLocaleDateString() %>
+                                </td>
+
+                                <td>
+                                    ₦<%= Number(payment.amount).toLocaleString() %>
+                                </td>
+
+                                <td>
+                                    <%= payment.paymentMethod || 'manual' %>
+                                </td>
+
+                            </tr>
+
+                        <% }) %>
+
+                    <% } else { %>
+
+                        <tr>
+
+                            <td colspan="3">
+                                No payment has been made for this term.
+                            </td>
+
+                        </tr>
+
+                    <% } %>
+
+                </tbody>
+
+            </table>
+
+        </div>
 
     </div>
 
 </div>
+
+
+<script>
+
+    // ==========================================
+    // FEES FROM SERVER
+    // ==========================================
+
+    const fees = <%- JSON.stringify(fees) %>;
+
+    const paymentSummary =
+        <%- JSON.stringify(paymentSummary || {}) %>;
+
+</script>
+<script src="/parent/payFee.js"></script>
+
 </body>
+
 </html>

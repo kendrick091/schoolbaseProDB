@@ -1,0 +1,270 @@
+/* ======================================================
+   SCHOOLBASE PRO BANNER
+====================================================== */
+
+.schoolbase-pro-banner {
+    margin: 25px 0;
+    padding: 30px 35px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0b3d2e 0%,
+            #0f5132 45%,
+            #198754 100%
+        );
+
+    color: white;
+
+    border-radius: 18px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    position: relative;
+    overflow: hidden;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Decorative circle */
+
+.schoolbase-pro-banner::after {
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.06);
+
+    right: 100px;
+    top: -100px;
+}
+
+
+/* Banner content */
+
+.pro-banner-content {
+    max-width: 750px;
+
+    position: relative;
+    z-index: 2;
+}
+
+
+/* Badge */
+
+.pro-badge {
+    display: inline-block;
+
+    padding: 7px 14px;
+
+    border-radius: 30px;
+
+    background: rgba(255, 255, 255, 0.15);
+
+    border: 1px solid rgba(255, 255, 255, 0.25);
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+
+    margin-bottom: 12px;
+}
+
+
+/* Main heading */
+
+.pro-banner-content h2 {
+    margin: 0 0 12px;
+
+    font-size: 30px;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+}
+
+
+/* Main paragraph */
+
+.pro-banner-content p {
+    margin: 0 0 10px;
+
+    font-size: 16px;
+
+    line-height: 1.7;
+
+    color: rgba(255, 255, 255, 0.92);
+}
+
+
+/* Smaller thank-you message */
+
+.pro-small-text {
+    font-size: 14px !important;
+
+    color: rgba(255, 255, 255, 0.72) !important;
+
+    max-width: 650px;
+}
+
+
+/* ======================================================
+   PRO ICON
+====================================================== */
+
+.pro-banner-icon {
+    width: 130px;
+    height: 130px;
+
+    flex-shrink: 0;
+
+    margin-left: 30px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.12);
+
+    border: 2px solid rgba(255, 255, 255, 0.25);
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    position: relative;
+
+    z-index: 2;
+
+    backdrop-filter: blur(5px);
+}
+
+
+.pro-star {
+    font-size: 40px;
+
+    line-height: 1;
+
+    margin-bottom: 5px;
+}
+
+
+.pro-banner-icon span {
+    font-size: 13px;
+
+    font-weight: 800;
+
+    letter-spacing: 3px;
+}
+
+
+/* ======================================================
+   PRO SECTION HEADER
+====================================================== */
+
+.pro-section-header {
+    margin: 30px 0 20px;
+
+    padding: 20px 25px;
+
+    background: #ffffff;
+
+    border-radius: 12px;
+
+    border-left: 5px solid #198754;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+
+.section-label {
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+
+    color: #198754;
+}
+
+
+.pro-section-header h2 {
+    margin: 5px 0;
+
+    font-size: 25px;
+
+    color: #173b2d;
+}
+
+
+.pro-section-header p {
+    margin: 0;
+
+    color: #6c757d;
+
+    font-size: 14px;
+}
+
+
+/* ======================================================
+   MOBILE
+====================================================== */
+
+@media (max-width: 700px) {
+
+    .schoolbase-pro-banner {
+
+        padding: 25px 20px;
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+    }
+
+
+    .pro-banner-content h2 {
+
+        font-size: 24px;
+
+    }
+
+
+    .pro-banner-content p {
+
+        font-size: 14px;
+
+    }
+
+
+    .pro-banner-icon {
+
+        width: 90px;
+        height: 90px;
+
+        margin: 20px 0 0;
+
+    }
+
+
+    .pro-star {
+
+        font-size: 28px;
+
+    }
+
+}

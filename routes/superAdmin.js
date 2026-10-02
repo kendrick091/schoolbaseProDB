@@ -291,5 +291,23 @@ router.post(
     }
 );
 
+router.get('/view-school-form/:schoolId', auth, role('superAdmin'), async (req, res) => {
+    try {
+        const school = await db.collection('users')
+        .findOne({ _id: new ObjectId(req.params.schoolId) });
+
+        res.render('superAdmin/viewSchoolForm', {
+            title: 'View Schools',
+            action: `view-school-form`,
+            school
+        });
+    
+    } catch (error) {
+        console.error('Error loading view school form:', error);
+        res.status(500).send('Unable to load view school form');
+    }
+
+});
+
 
 module.exports = router;

@@ -2,6 +2,7 @@ const express = require('express');
 const { ObjectId } = require('mongodb');
 const db = require('../../schoolbaseProDB/db.js')
 const auth = require('../middleware/auth.js')
+const multer = require('multer');
 
 
 const router = express.Router();
@@ -14,6 +15,39 @@ const subjectsCollection = db.collection('subjects');
 const academicCollection = db.collection('academicSessions');
 const resultsCollection = db.collection('results')
 const paymentsCollection = db.collection('payments');
+const teacherRemarkCollection = db.collection('teacherRemark');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        let uploadPath = "uploads/";
+
+        if (file.fieldname === "schoolLogo") {
+            uploadPath += "logos";
+        } else if (file.fieldname === "studentPassport") {
+            uploadPath += "passport";
+        } else {
+            uploadPath += "others";
+        }
+
+        cb(null, uploadPath);
+    },
+
+    filename: (req, file, cb) => {
+        const uniqueName = Date.now() + path.extname(file.originalname);
+        cb(null, uniqueName);
+    }
+});
+
+const upload = multer({
+    storage,
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith("image/")) {
+            cb(null, true);
+        } else {
+            cb(new Error("Only images allowed"));
+        }
+    }
+});
 
 router.get('/:id', auth, async (req, res)=>{
      const school = await schoolCollection.findOne({
@@ -66,7 +100,8 @@ router.get('/result/load', auth, async (req, res) => {
         paymentType: {
             $in: [
                 "school_student",
-                "parent_student"
+                "parent_student",
+                "school_fee"
             ]
         }
     
@@ -341,6 +376,14 @@ for (const subjectId in groupedSubjects) {
       term
     });
 
+    // 16. Teacher Manual Statement
+const teacherManualRemark = await teacherRemarkCollection.findOne({
+  schoolID: student.schoolID,
+  studentId: studentObjectId,
+  academicSessionId: new ObjectId(academicSessionId),
+  term
+});
+
     // 15. response
     return res.json({
       // exists: true,
@@ -354,8 +397,11 @@ for (const subjectId in groupedSubjects) {
       resumptionDate,
       results: mappedResults,
       psychomotor: psychomotorData,
+      
       headTeacherRemark,
       formTeacherRemark,
+      // New manual teacher statement
+      manualRemark: teacherManualRemark?.manualRemark || '',
       totalScore,
       average,
       grade,

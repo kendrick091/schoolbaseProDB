@@ -16,6 +16,7 @@ const subjectsCollection = db.collection('subjects');
 const academicCollection = db.collection('academicSessions');
 const resultsCollection = db.collection('results')
 const paymentsCollection = db.collection('payments');
+const teacherRemarkCollection = db.collection('teacherRemark');
 
 router.get('/', auth, async (req, res) => {
     const student = await studentsCollection.findOne({
@@ -68,7 +69,8 @@ router.get('/result/load', auth, async (req, res) => {
     paymentType: {
         $in: [
             "school_student",
-            "parent_student"
+            "parent_student",
+            "school_fee"
         ]
     }
 
@@ -270,6 +272,14 @@ const psychomotorData = await db.collection('psychomotor').findOne({
   term
 });
 
+// 16. Teacher Manual Statement
+const teacherManualRemark = await teacherRemarkCollection.findOne({
+  schoolID: student.schoolID,
+  studentId: new ObjectId(student._id),
+  academicSessionId: new ObjectId(academicSessionId),
+  term
+});
+
 res.json({
   // exists: true,
   // paymentRequired: false,
@@ -288,6 +298,8 @@ res.json({
     // ✅ ADD THIS teacher Remark
   headTeacherRemark,
   formTeacherRemark,
+    // New manual teacher statement
+  manualRemark: teacherManualRemark?.manualRemark || '',
 
   totalScore,
   average,

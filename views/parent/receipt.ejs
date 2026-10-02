@@ -11,11 +11,11 @@
     >
 
     <title>Parent Payment Receipt</title>
+
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
-
 
     <style>
 
@@ -31,17 +31,11 @@
             border-radius: 15px;
         }
 
-        .display-info{
+        .display-info {
             background: #f8f9fa;
             padding: clamp(15px, 2vw, 25px);
             border-radius: 12px;
-            margin-bottom: clamp(20px, 2vw, 30px);
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .display-info .row .col-md-6{
-            width: 100%;
+            margin-bottom: 25px;
         }
 
         .receipt-stamp {
@@ -131,9 +125,9 @@
 <div class="container">
 
 
-    <!-- ========================================== -->
-    <!-- RECEIPT SEARCH FORM -->
-    <!-- ========================================== -->
+    <!-- ==========================================
+         PAYMENT SELECTION
+    =========================================== -->
 
     <div class="card selection-card shadow-sm">
 
@@ -144,7 +138,8 @@
             </h3>
 
             <p class="text-muted">
-                Select payment details to view complete payment history.
+                Select an academic session and term to view
+                payment history.
             </p>
 
 
@@ -155,6 +150,66 @@
             ></div>
 
 
+            <!-- ==========================================
+                 KNOWN PARENT AND STUDENT
+            =========================================== -->
+
+            <div class="display-info">
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <strong>
+                            Parent:
+                        </strong>
+
+                        <span>
+                            <%= parent.parentFullName
+                                || parent.parentName
+                                || parent.name
+                                || parent.phone
+                                || '-'
+                            %>
+                        </span>
+
+                    </div>
+
+
+                    <div class="col-md-6 mb-3">
+
+                        <strong>
+                            Student:
+                        </strong>
+
+                        <span>
+                            <%= student.studentFullName || '-' %>
+                        </span>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <strong>
+                            Admission No:
+                        </strong>
+
+                        <span>
+                            <%= student.admissionNumber || '-' %>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==========================================
+                 SESSION AND TERM
+            =========================================== -->
+
             <div class="row g-3">
 
 
@@ -162,7 +217,10 @@
 
                 <div class="col-md-6">
 
-                    <label class="form-label">
+                    <label
+                        for="academicSessionId"
+                        class="form-label"
+                    >
                         Academic Session
                     </label>
 
@@ -196,75 +254,14 @@
                 </div>
 
 
-
-                <!-- PARENT -->
-
-                <div class="col-md-6">
-
-                    <label class="form-label">
-                        Parent
-                    </label>
-
-                    <select
-                        id="parentId"
-                        class="form-select"
-                    >
-
-                        <option value="">
-                            Select Parent
-                        </option>
-
-                        <% parents.forEach(parent => { %>
-
-                            <option
-                                value="<%= parent._id %>"
-                            >
-
-                                <%= parent.parentFullName
-                                    || parent.parentName
-                                    || parent.name
-                                    || parent.phone
-                                %>
-
-                            </option>
-
-                        <% }) %>
-
-                    </select>
-
-                </div>
-
-
-
-                <!-- STUDENT -->
-
-                <div class="col-md-6">
-
-                    <label class="form-label">
-                        Student
-                    </label>
-
-                    <select
-                        id="studentId"
-                        class="form-select"
-                        disabled
-                    >
-
-                        <option value="">
-                            Select Parent First
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-
                 <!-- TERM -->
 
                 <div class="col-md-6">
 
-                    <label class="form-label">
+                    <label
+                        for="term"
+                        class="form-label"
+                    >
                         Term
                     </label>
 
@@ -293,7 +290,6 @@
 
                 </div>
 
-
             </div>
 
         </div>
@@ -301,10 +297,9 @@
     </div>
 
 
-
-    <!-- ========================================== -->
-    <!-- ACTION BUTTONS -->
-    <!-- ========================================== -->
+    <!-- ==========================================
+         ACTION BUTTONS
+    =========================================== -->
 
     <div
         class="action-buttons"
@@ -319,34 +314,35 @@
         </button>
 
 
-        <button
+        <!-- <button
             class="btn btn-success"
             onclick="shareWhatsApp()"
         >
             📱 Send via WhatsApp
-        </button>
+        </button> -->
 
     </div>
 
 
-
-    <!-- ========================================== -->
-    <!-- RECEIPT -->
-    <!-- ========================================== -->
+    <!-- ==========================================
+         RECEIPT
+    =========================================== -->
 
     <div
         class="receipt-container shadow-sm"
         id="receiptContainer"
     >
 
-
         <div class="receipt-header">
 
             <h5>
-                <%=school.schoolname || school.name || 'SchoolBase' %>
+                <%= school.schoolname
+                    || school.name
+                    || 'SchoolBase'
+                %>
             </h5>
 
-            <h2 id="schoolname">
+            <h2>
                 SCHOOL PAYMENT RECEIPT
             </h2>
 
@@ -357,75 +353,91 @@
         </div>
 
 
-
-        <!-- STUDENT INFORMATION -->
+        <!-- ==========================================
+             STUDENT INFORMATION
+        =========================================== -->
 
         <div class="display-info">
-        <div class="row mb-4">
 
-            <div class="col-md-6">
+            <div class="row">
 
-                <strong>
-                    Parent:
-                </strong>
+                <div class="col-md-6 mb-2">
 
-                <span id="receiptParent"></span>
+                    <strong>
+                        Parent:
+                    </strong>
 
-            </div>
+                    <span id="receiptParent">
+                        <%= parent.parentFullName
+                            || parent.parentName
+                            || parent.name
+                            || parent.phone
+                            || '-'
+                        %>
+                    </span>
 
-
-            <div class="col-md-6">
-
-                <strong>
-                    Student:
-                </strong>
-
-                <span id="receiptStudent"></span>
-
-            </div>
+                </div>
 
 
-            <div class="col-md-6 mt-2">
+                <div class="col-md-6 mb-2">
 
-                <strong>
-                    Admission No:
-                </strong>
+                    <strong>
+                        Student:
+                    </strong>
 
-                <span id="receiptAdmission"></span>
+                    <span id="receiptStudent">
+                        <%= student.studentFullName || '-' %>
+                    </span>
 
-            </div>
-
-            </div>
-
-            <div class="row mb-4">
-
-            <div class="col-md-6 mt-2">
-
-                <strong>
-                    Academic Session:
-                </strong>
-
-                <span id="receiptSession"></span>
-
-            </div>
+                </div>
 
 
-            <div class="col-md-6 mt-2">
+                <div class="col-md-6 mb-2">
 
-                <strong>
-                    Term:
-                </strong>
+                    <strong>
+                        Admission No:
+                    </strong>
 
-                <span id="receiptTerm"></span>
+                    <span id="receiptAdmission">
+                        <%= student.admissionNumber || '-' %>
+                    </span>
+
+                </div>
+
+
+                <div class="col-md-6 mb-2">
+
+                    <strong>
+                        Academic Session:
+                    </strong>
+
+                    <span id="receiptSession">
+                        -
+                    </span>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <strong>
+                        Term:
+                    </strong>
+
+                    <span id="receiptTerm">
+                        -
+                    </span>
+
+                </div>
 
             </div>
 
         </div>
-        </div>
 
 
-
-        <!-- PAYMENT HISTORY -->
+        <!-- ==========================================
+             PAYMENT HISTORY
+        =========================================== -->
 
         <h5 class="mb-3">
             Payment History
@@ -459,7 +471,7 @@
                         </th>
 
                         <th>
-                            Note
+                            Payment Method
                         </th>
 
                     </tr>
@@ -476,8 +488,9 @@
         </div>
 
 
-
-        <!-- TOTAL -->
+        <!-- ==========================================
+             TOTAL
+        =========================================== -->
 
         <div class="amount-card">
 
@@ -494,6 +507,7 @@
 
         </div>
 
+
         <div class="text-center text-muted">
 
             <strong>
@@ -507,185 +521,99 @@
 
             <br><br>
 
-            <!---- Stamp and signature code below ----->
+
+            <!-- STAMP -->
+
             <div class="stamp-signature">
+
                 <% if (school.stampSignature) { %>
 
-            <img
-                src="/uploads/stamp/<%= school.stampSignature %>"
-                alt="School Stamp and Signature"
-                class="receipt-stamp"
-            >
+                    <img
+                        src="/uploads/stamp/<%= school.stampSignature %>"
+                        alt="School Stamp and Signature"
+                        class="receipt-stamp"
+                    >
 
-        <% } %>
+                <% } %>
+
             </div>
+
             <br>
-            <i>Generated by SchoolBase.</i>
+
+            <i>
+                Generated by SchoolBase.
+            </i>
 
         </div>
 
-
     </div>
 
-
 </div>
-
 
 
 <script>
 
 
 // =====================================================
+// KNOWN STUDENT
+// =====================================================
+
+const studentId =
+    "<%= student._id %>";
+
+
+// =====================================================
 // ELEMENTS
 // =====================================================
 
-const parentSelect =
-    document.getElementById('parentId');
-
-const studentSelect =
-    document.getElementById('studentId');
-
 const sessionSelect =
-    document.getElementById('academicSessionId');
+    document.getElementById(
+        'academicSessionId'
+    );
 
 const termSelect =
-    document.getElementById('term');
+    document.getElementById(
+        'term'
+    );
 
 const receiptContainer =
-    document.getElementById('receiptContainer');
+    document.getElementById(
+        'receiptContainer'
+    );
 
 const actionButtons =
-    document.getElementById('actionButtons');
+    document.getElementById(
+        'actionButtons'
+    );
 
 const messageBox =
-    document.getElementById('messageBox');
+    document.getElementById(
+        'messageBox'
+    );
 
 let currentReceiptData = null;
 
 
-
 // =====================================================
-// LOAD STUDENTS WHEN PARENT CHANGES
+// LOAD RECEIPT WHEN SESSION OR TERM CHANGES
 // =====================================================
 
-parentSelect.addEventListener(
+sessionSelect.addEventListener(
     'change',
-    async function () {
+    loadReceipt
+);
 
-        const parentId = this.value;
-
-
-        studentSelect.innerHTML =
-            '<option value="">Loading students...</option>';
-
-        studentSelect.disabled = true;
-
-        hideReceipt();
-
-
-        if (!parentId) {
-
-            studentSelect.innerHTML =
-                '<option value="">Select Parent First</option>';
-
-            return;
-
-        }
-
-
-        try {
-
-            const response =
-                await fetch(
-                    `/manualPaymentReceipts/parent/${parentId}/students`
-                );
-
-
-            const data =
-                await response.json();
-
-
-            if (!data.success) {
-
-                throw new Error(
-                    data.message
-                );
-
-            }
-
-
-            studentSelect.innerHTML =
-                '<option value="">Select Student</option>';
-
-
-            data.students.forEach(
-                student => {
-
-                    const option =
-                        document.createElement('option');
-
-                    option.value =
-                        student._id;
-
-                    option.textContent =
-                        `${student.studentFullName} (${student.admissionNumber || 'No Admission Number'})`;
-
-                    studentSelect.appendChild(
-                        option
-                    );
-
-                }
-            );
-
-
-            studentSelect.disabled = false;
-
-
-        } catch (error) {
-
-            console.error(error);
-
-            showMessage(
-                error.message ||
-                'Unable to load students',
-                'danger'
-            );
-
-        }
-
-    }
+termSelect.addEventListener(
+    'change',
+    loadReceipt
 );
 
 
-
 // =====================================================
-// AUTOMATICALLY LOAD RECEIPT
+// LOAD RECEIPT
 // =====================================================
-
-[
-    parentSelect,
-    studentSelect,
-    sessionSelect,
-    termSelect
-].forEach(element => {
-
-    element.addEventListener(
-        'change',
-        loadReceipt
-    );
-
-});
-
-
 
 async function loadReceipt() {
-
-
-    const parentId =
-        parentSelect.value;
-
-    const studentId =
-        studentSelect.value;
 
     const academicSessionId =
         sessionSelect.value;
@@ -694,11 +622,11 @@ async function loadReceipt() {
         termSelect.value;
 
 
-    // Don't load until everything is selected
+    // -----------------------------------------------
+    // WAIT UNTIL BOTH ARE SELECTED
+    // -----------------------------------------------
 
     if (
-        !parentId ||
-        !studentId ||
         !academicSessionId ||
         !term
     ) {
@@ -716,33 +644,52 @@ async function loadReceipt() {
             'block';
 
 
+        actionButtons.style.display =
+            'none';
+
+
         document.getElementById(
             'paymentHistoryBody'
         ).innerHTML = `
 
             <tr>
-                <td colspan="5" class="text-center">
+
+                <td
+                    colspan="5"
+                    class="text-center py-4"
+                >
+
                     Loading payment history...
+
                 </td>
+
             </tr>
 
         `;
 
 
+        hideMessage();
+
+
+        // -----------------------------------------------
+        // REQUEST PAYMENT HISTORY
+        // -----------------------------------------------
+
         const params =
             new URLSearchParams({
 
-                parentId,
-                studentId,
-                academicSessionId,
-                term
+                academicSessionId:
+                    academicSessionId,
+
+                term:
+                    term
 
             });
 
 
         const response =
             await fetch(
-                `/manualPaymentReceipts/history?${params}`
+                `/parentDashBoard/receipt/${studentId}/history?${params.toString()}`
             );
 
 
@@ -750,11 +697,11 @@ async function loadReceipt() {
             await response.json();
 
 
-        if (!data.success) {
+        if (!response.ok || !data.success) {
 
             throw new Error(
                 data.message ||
-                'Unable to load receipt'
+                'Unable to load payment history'
             );
 
         }
@@ -771,7 +718,10 @@ async function loadReceipt() {
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            'RECEIPT LOAD ERROR:',
+            error
+        );
 
 
         hideReceipt();
@@ -779,7 +729,7 @@ async function loadReceipt() {
 
         showMessage(
             error.message ||
-            'Unable to load receipt',
+            'Unable to load payment history',
             'danger'
         );
 
@@ -788,13 +738,11 @@ async function loadReceipt() {
 }
 
 
-
 // =====================================================
 // DISPLAY RECEIPT
 // =====================================================
 
 function displayReceipt(data) {
-
 
     receiptContainer.style.display =
         'block';
@@ -803,35 +751,45 @@ function displayReceipt(data) {
         'flex';
 
 
+    // -----------------------------------------------
+    // BASIC INFORMATION
+    // -----------------------------------------------
+
     document.getElementById(
         'receiptParent'
     ).textContent =
-        data.parentFullName || data.parent.name || '-';
+        data.parent?.name || '-';
 
 
     document.getElementById(
         'receiptStudent'
     ).textContent =
-        data.student.name;
+        data.student?.name || '-';
 
 
     document.getElementById(
         'receiptAdmission'
     ).textContent =
-        data.student.admissionNumber;
+        data.student?.admissionNumber || '-';
 
 
     document.getElementById(
         'receiptSession'
     ).textContent =
-        data.academicSession;
+        data.academicSession || '-';
 
 
     document.getElementById(
         'receiptTerm'
     ).textContent =
-        formatTerm(data.term);
+        formatTerm(
+            data.term
+        );
 
+
+    // -----------------------------------------------
+    // PAYMENT TABLE
+    // -----------------------------------------------
 
     const paymentHistoryBody =
         document.getElementById(
@@ -843,7 +801,10 @@ function displayReceipt(data) {
         '';
 
 
-    if (!data.payments.length) {
+    if (
+        !data.payments ||
+        !data.payments.length
+    ) {
 
         paymentHistoryBody.innerHTML = `
 
@@ -854,7 +815,8 @@ function displayReceipt(data) {
                     class="text-center text-muted py-4"
                 >
 
-                    No payment has been recorded yet.
+                    No payment has been recorded
+                    for this term.
 
                 </td>
 
@@ -862,13 +824,16 @@ function displayReceipt(data) {
 
         `;
 
+
     } else {
 
         data.payments.forEach(
             (payment, index) => {
 
                 const row =
-                    document.createElement('tr');
+                    document.createElement(
+                        'tr'
+                    );
 
 
                 row.innerHTML = `
@@ -879,13 +844,14 @@ function displayReceipt(data) {
 
                     <td>
                         ${formatDate(
+                            payment.paidAt ||
                             payment.createdAt
                         )}
                     </td>
 
                     <td>
                         ₦${Number(
-                            payment.amount
+                            payment.amount || 0
                         ).toLocaleString()}
                     </td>
 
@@ -894,7 +860,11 @@ function displayReceipt(data) {
                     </td>
 
                     <td>
-                        ${payment.note || '-'}
+                        ${
+                            payment.paymentMethod === 'paystack'
+                                ? 'Paystack'
+                                : 'Manual'
+                        }
                     </td>
 
                 `;
@@ -910,16 +880,19 @@ function displayReceipt(data) {
     }
 
 
+    // -----------------------------------------------
+    // TOTAL
+    // -----------------------------------------------
+
     document.getElementById(
         'totalPaid'
     ).textContent =
 
         `₦${Number(
-            data.totalPaid
+            data.totalPaid || 0
         ).toLocaleString()}`;
 
 }
-
 
 
 // =====================================================
@@ -938,7 +911,6 @@ function hideReceipt() {
         null;
 
 }
-
 
 
 // =====================================================
@@ -961,10 +933,9 @@ function formatTerm(term) {
     };
 
 
-    return terms[term] || term;
+    return terms[term] || term || '-';
 
 }
-
 
 
 // =====================================================
@@ -973,23 +944,37 @@ function formatTerm(term) {
 
 function formatDate(date) {
 
-    return new Date(
-        date
-    ).toLocaleDateString(
+    if (!date) {
+        return '-';
+    }
+
+
+    const parsedDate =
+        new Date(date);
+
+
+    if (isNaN(parsedDate.getTime())) {
+        return '-';
+    }
+
+
+    return parsedDate.toLocaleDateString(
         'en-NG',
         {
 
-            day: '2-digit',
+            day:
+                '2-digit',
 
-            month: 'long',
+            month:
+                'long',
 
-            year: 'numeric'
+            year:
+                'numeric'
 
         }
     );
 
 }
-
 
 
 // =====================================================
@@ -1013,31 +998,52 @@ function shareWhatsApp() {
         '';
 
 
-    data.payments.forEach(
-        (payment, index) => {
+    if (
+        data.payments &&
+        data.payments.length
+    ) {
 
-            paymentHistory +=
+        data.payments.forEach(
+            (payment, index) => {
 
-`${index + 1}. ${formatDate(payment.createdAt)}
-Amount: ₦${Number(payment.amount).toLocaleString()}
+                paymentHistory +=
+
+`${index + 1}. ${formatDate(
+    payment.paidAt || payment.createdAt
+)}
+Amount: ₦${Number(
+    payment.amount || 0
+).toLocaleString()}
 Ref: ${payment.reference || '-'}
+Method: ${
+    payment.paymentMethod === 'paystack'
+        ? 'Paystack'
+        : 'Manual'
+}
 \n`;
 
-        }
-    );
+            }
+        );
+
+    } else {
+
+        paymentHistory =
+            'No payment recorded for this term.\n';
+
+    }
 
 
     const message =
 
 `*SCHOOL FEE PAYMENT RECEIPT*
 
-<!---- Parent: ${data.parent.name} ---->
+Parent: ${data.parent?.name || '-'}
 
-Student: ${data.student.name}
+Student: ${data.student?.name || '-'}
 
-Admission No: ${data.student.admissionNumber}
+Admission No: ${data.student?.admissionNumber || '-'}
 
-Academic Session: ${data.academicSession}
+Academic Session: ${data.academicSession || '-'}
 
 Term: ${formatTerm(data.term)}
 
@@ -1045,15 +1051,16 @@ Term: ${formatTerm(data.term)}
 
 ${paymentHistory}
 
-*TOTAL AMOUNT PAID: ₦${Number(data.totalPaid).toLocaleString()}*
+*TOTAL AMOUNT PAID: ₦${Number(
+    data.totalPaid || 0
+).toLocaleString()}*
 
-This is a summary of all payments recorded by the school.
+This is a summary of all payments recorded for this term.
 
 Generated by SchoolBase.`;
 
 
     const whatsappURL =
-
         `https://wa.me/?text=${encodeURIComponent(
             message
         )}`;
@@ -1067,12 +1074,14 @@ Generated by SchoolBase.`;
 }
 
 
-
 // =====================================================
 // SHOW MESSAGE
 // =====================================================
 
-function showMessage(message, type) {
+function showMessage(
+    message,
+    type
+) {
 
     messageBox.style.display =
         'block';
@@ -1084,6 +1093,18 @@ function showMessage(message, type) {
 
     messageBox.textContent =
         message;
+
+}
+
+
+// =====================================================
+// HIDE MESSAGE
+// =====================================================
+
+function hideMessage() {
+
+    messageBox.style.display =
+        'none';
 
 }
 

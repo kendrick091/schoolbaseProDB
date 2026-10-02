@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Teacher Statement</title>
+
+    <link
+        rel="stylesheet"
+        href="/stylesheet/teacher-dashboard.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="/stylesheet/teacherStatement.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<div class="dashboard">
+
+
+    <!-- ==================================================
+         SIDEBAR
+    =================================================== -->
+
+    <aside class="sidebar">
+
+        <h2 class="logo">
+            SchoolBase
+        </h2>
+
+        <ul class="nav">
+
+            <a href="/teacherDashboard">
+                <li>Dashboard</li>
+            </a>
+
+            <a href="/teacherClass/<%= classAssigned._id %>">
+                <li>My Class</li>
+            </a>
+
+            <a href="/teacherPsychomotor">
+                <li>Psychomotor</li>
+            </a>
+
+            <a href="/teacherRemark">
+                <li>Remark</li>
+            </a>
+
+            <a href="/teacherStatement">
+                <li class="active">Add Statement</li>
+            </a>
+
+            <a href="/teacherResult">
+                <li>Results</li>
+            </a>
+
+            <a href="/teacherLogin/logout">
+                <li>Logout</li>
+            </a>
+
+        </ul>
+
+    </aside>
+
+
+
+    <!-- ==================================================
+         MAIN CONTENT
+    =================================================== -->
+
+    <main class="content">
+
+
+        <!-- ==================================================
+             MANUAL STUDENT STATEMENT
+        =================================================== -->
+
+        <div class="card teacher-manual-remark">
+
+
+            <!-- ==================================================
+                 HEADER
+            =================================================== -->
+
+            <div class="remark-heading">
+
+                <h3>
+                    Student Character &amp; Improvement
+                </h3>
+
+                <p>
+                    Write a personal comment about a student's
+                    character, attitude, participation, conduct,
+                    or academic improvement.
+                </p>
+
+            </div>
+
+
+
+            <!-- ==================================================
+                 FORM
+            =================================================== -->
+
+            <form
+                action="/teacherStatement/save"
+                method="POST"
+            >
+
+
+                <!-- ==================================================
+                     STUDENT
+                =================================================== -->
+
+                <div class="form-group">
+
+                    <label for="studentId">
+                        Select Student
+                    </label>
+
+                    <select
+                        id="studentId"
+                        name="studentId"
+                        required
+                    >
+
+                        <option value="">
+                            -- Select Student --
+                        </option>
+
+                        <% students.forEach(student => { %>
+
+                            <option
+                                value="<%= student._id %>"
+                            >
+
+                                <%= student.studentFullName %>
+
+                                <% if (student.admissionNumber) { %>
+
+                                    -
+                                    <%= student.admissionNumber %>
+
+                                <% } %>
+
+                            </option>
+
+                        <% }) %>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- ==================================================
+                     ACADEMIC SESSION
+                =================================================== -->
+
+                <div class="form-group">
+
+                    <label for="academicSessionId">
+                        Academic Session
+                    </label>
+
+                    <select
+                        id="academicSessionId"
+                        name="academicSessionId"
+                        required
+                    >
+
+                        <option value="">
+                            -- Select Academic Session --
+                        </option>
+
+                        <% sessions.forEach(session => { %>
+
+                            <option
+                                value="<%= session._id %>"
+                            >
+
+                                <%= session.academicSession %>
+
+                            </option>
+
+                        <% }) %>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- ==================================================
+                     TERM
+                =================================================== -->
+
+                <div class="form-group">
+
+                    <label for="term">
+                        Term
+                    </label>
+
+                    <select
+                        id="term"
+                        name="term"
+                        required
+                    >
+
+                        <option value="">
+                            -- Select Term --
+                        </option>
+
+                        <option value="term1">
+                            First Term
+                        </option>
+
+                        <option value="term2">
+                            Second Term
+                        </option>
+
+                        <option value="term3">
+                            Third Term
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- ==================================================
+                     STATEMENT
+                =================================================== -->
+
+                <div class="form-group">
+
+                    <label for="manualRemark">
+                        Student Manual Remark
+                    </label>
+
+                    <textarea
+                        id="manualRemark"
+                        name="manualRemark"
+                        rows="7"
+                        maxlength="1000"
+                        required
+                        placeholder="Write about the student's character, behaviour, participation, strengths, or improvement..."
+                    ></textarea>
+
+
+                    <!-- STATUS + CHARACTER COUNT -->
+
+                    <div class="remark-info">
+
+                        <span id="statementStatus">
+                            Select a student, session and term.
+                        </span>
+
+                        <span id="characterCount">
+                            0 / 1000
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==================================================
+                     SAVE BUTTON
+                =================================================== -->
+
+                <button
+                    type="submit"
+                    class="btn-save"
+                >
+
+                    Save Student Remark
+
+                </button>
+
+
+            </form>
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+
+<!-- ==========================================================
+     JAVASCRIPT
+=========================================================== -->
+
+<script>
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+
+        // ==================================================
+        // GET ELEMENTS
+        // ==================================================
+
+        const studentSelect =
+            document.getElementById('studentId');
+
+        const sessionSelect =
+            document.getElementById('academicSessionId');
+
+        const termSelect =
+            document.getElementById('term');
+
+        const remarkTextarea =
+            document.getElementById('manualRemark');
+
+        const statementStatus =
+            document.getElementById('statementStatus');
+
+        const characterCount =
+            document.getElementById('characterCount');
+
+
+
+        // ==================================================
+        // UPDATE CHARACTER COUNT
+        // ==================================================
+
+        function updateCharacterCount() {
+
+            characterCount.textContent =
+                `${remarkTextarea.value.length} / 1000`;
+
+        }
+
+
+
+        // ==================================================
+        // LOAD EXISTING STATEMENT
+        // ==================================================
+
+        async function loadExistingStatement() {
+
+
+            const studentId =
+                studentSelect.value;
+
+            const academicSessionId =
+                sessionSelect.value;
+
+            const term =
+                termSelect.value;
+
+
+
+            // ==================================================
+            // NOTHING SELECTED YET
+            // ==================================================
+
+            if (
+                !studentId ||
+                !academicSessionId ||
+                !term
+            ) {
+
+                remarkTextarea.value = '';
+
+                statementStatus.textContent =
+                    'Select a student, session and term.';
+
+                updateCharacterCount();
+
+                return;
+
+            }
+
+
+
+            // ==================================================
+            // SHOW LOADING
+            // ==================================================
+
+            remarkTextarea.value =
+                'Checking for existing statement...';
+
+            remarkTextarea.disabled = true;
+
+            statementStatus.textContent =
+                'Checking for existing statement...';
+
+            updateCharacterCount();
+
+
+
+            try {
+
+
+                // ==================================================
+                // REQUEST EXISTING STATEMENT
+                // ==================================================
+
+                const response =
+                    await fetch(
+                        `/teacherStatement/get?studentId=${encodeURIComponent(studentId)}&academicSessionId=${encodeURIComponent(academicSessionId)}&term=${encodeURIComponent(term)}`
+                    );
+
+
+
+                // ==================================================
+                // CONVERT RESPONSE TO JSON
+                // ==================================================
+
+                const data =
+                    await response.json();
+
+
+
+                // ==================================================
+                // REQUEST FAILED
+                // ==================================================
+
+                if (
+                    !response.ok ||
+                    !data.success
+                ) {
+
+                    remarkTextarea.value = '';
+
+                    statementStatus.textContent =
+                        'Unable to load statement.';
+
+                    updateCharacterCount();
+
+                    alert(
+                        data.message ||
+                        'Unable to load statement'
+                    );
+
+                    return;
+
+                }
+
+
+
+                // ==================================================
+                // EXISTING STATEMENT FOUND
+                // ==================================================
+
+                if (data.exists) {
+
+
+                    remarkTextarea.value =
+                        data.manualRemark || '';
+
+
+                    statementStatus.textContent =
+                        'Existing statement loaded. You can edit it.';
+
+
+                }
+
+
+                // ==================================================
+                // NO EXISTING STATEMENT
+                // ==================================================
+
+                else {
+
+
+                    remarkTextarea.value = '';
+
+
+                    statementStatus.textContent =
+                        'No statement yet. You can add one.';
+
+
+                }
+
+
+
+                // ==================================================
+                // UPDATE CHARACTER COUNT
+                // ==================================================
+
+                updateCharacterCount();
+
+
+            }
+
+
+            catch (error) {
+
+
+                console.error(
+                    'LOAD STATEMENT ERROR:',
+                    error
+                );
+
+
+                remarkTextarea.value = '';
+
+                statementStatus.textContent =
+                    'Unable to check for existing statement.';
+
+                updateCharacterCount();
+
+
+                alert(
+                    'Unable to check for existing statement'
+                );
+
+
+            }
+
+
+            finally {
+
+
+                // ==================================================
+                // ENABLE TEXTAREA AGAIN
+                // ==================================================
+
+                remarkTextarea.disabled = false;
+
+
+            }
+
+        }
+
+
+
+        // ==================================================
+        // STUDENT CHANGED
+        // ==================================================
+
+        studentSelect.addEventListener(
+            'change',
+            loadExistingStatement
+        );
+
+
+
+        // ==================================================
+        // SESSION CHANGED
+        // ==================================================
+
+        sessionSelect.addEventListener(
+            'change',
+            loadExistingStatement
+        );
+
+
+
+        // ==================================================
+        // TERM CHANGED
+        // ==================================================
+
+        termSelect.addEventListener(
+            'change',
+            loadExistingStatement
+        );
+
+
+
+        // ==================================================
+        // CHARACTER COUNTER
+        // ==================================================
+
+        remarkTextarea.addEventListener(
+            'input',
+            updateCharacterCount
+        );
+
+
+        // Initial count
+        updateCharacterCount();
+
+
+    }
+);
+
+</script>
+
+
+
+</body>
+
+</html>
