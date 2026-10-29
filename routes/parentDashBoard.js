@@ -1097,7 +1097,7 @@ router.post(
             // ==================================================
 
             const secretKey =
-                process.env.PAYSTACK_SECRET_KEY;
+                process.env.PAYSTACK_SECRET_KEY_TEST;
 
 
             if (!secretKey) {
@@ -1141,6 +1141,9 @@ router.post(
                         // School Paystack subaccount
                         subaccount:
                             school.paystackSubaccountCode,
+
+                        // Let the school pay Paystack transaction fees
+                        bearer: 'subaccount',
 
                         callback_url:
                             `${req.protocol}://${req.get('host')}/parentDashBoard/paystack/callback`,
@@ -1323,7 +1326,7 @@ router.get(
             // ==================================================
 
             const secretKey =
-                process.env.PAYSTACK_SECRET_KEY;
+                process.env.PAYSTACK_SECRET_KEY_TEST;
 
 
             if (!secretKey) {
